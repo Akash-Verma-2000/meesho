@@ -1,0 +1,55 @@
+@import "tailwindcss";
+/* @import "tw-animate-css"; */
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-display: "Satoshi", "sans-serif";
+  --color-bg-primary: rgba(100, 252, 168, 0.15);
+  --color-primary: #0d6efd;
+  --color-secondary: #198754;
+  --color-tertiary: #ff0000;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  height: 8px;
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #3b82f6 #f3f4f6;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation: slideIn 0.7s ease-out forwards;
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+.left-timeline {
+  transform: translateX(-2rem);
+}
+
+.right-timeline {
+  transform: translateX(2rem);
+}
+
+@media (max-width: 768px) {
+
+  .left-timeline,
+  .right-timeline {
+    transform: translateX(0);
+  }
+}
