@@ -1,5 +1,6 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import WebsiteLayout from '@/components/WebsiteLayout';
 import { useState, useEffect } from 'react';
 import { FaTimesCircle } from 'react-icons/fa';
@@ -7,7 +8,31 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
 
-export default function CreateOrderPage() {
+// Add error boundary
+const ErrorBoundary = ({ children }) => {
+    const [hasError, setHasError] = useState(false);
+
+    if (hasError) {
+        return (
+            <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+                <div className="text-center">
+                    <h2 className="text-xl font-bold text-red-600 mb-2">Something went wrong</h2>
+                    <button
+                        onClick={() => window.location.reload()}
+                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    >
+                        Reload Page
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    return children;
+};
+
+// Wrap the main component with error boundary
+const CreateOrderPage = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const orderId = searchParams.get('id');
@@ -299,4 +324,9 @@ export default function CreateOrderPage() {
             </div>
         </div>
     );
-} 
+};
+
+// Export with dynamic import and no SSR for client-side only features
+export default dynamic(() => Promise.resolve(CreateOrderPage), {
+    ssr: false
+}); 
