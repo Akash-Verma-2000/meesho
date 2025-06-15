@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import connectToDatabase from "../../../../../configurations/mongoose.config.js";
 import { CommissionModal } from "../../../../../modals/commissions.js";
-import { TransactionModal } from "../../../../../modals/transactions.js";
+import { TransactionNodal } from "../../../../../modals/transactions.js";
 import { verifyToken } from "../../../../../middlewares/auth.js";
 import mongoose from "mongoose";
 

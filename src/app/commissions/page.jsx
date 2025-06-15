@@ -3,7 +3,7 @@
 import WebsiteLayout from "@/components/WebsiteLayout";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import toast from "react-toastify";
+import {toast} from "react-toastify";
 
 export default function CommissionsPage() {
     const [commissions, setCommissions] = useState([]);
