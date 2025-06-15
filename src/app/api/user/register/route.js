@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import connectToDatabase from "../../../../../configurations/mongoose.config";
-import { UserModal } from "../../../../../modals/user";
+import { UserModal } from "../../../../../modals/users.js";
 import { createDocKey } from "@/utils/utility";
 
 
