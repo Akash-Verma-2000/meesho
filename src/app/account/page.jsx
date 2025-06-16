@@ -143,25 +143,7 @@ export default function ProfilePage() {
               Withdrawal
             </Link>
           </div>
-          <p className="text-base text-gray-600 mb-6">Balance</p>
-
-          <div className="grid grid-cols-3 text-center gap-2">
-            <div>
-              <FaWallet className="text-blue-500 text-3xl mx-auto mb-2" />
-              <p className="text-gray-700 text-sm">Total</p>
-              <p className="text-gray-900 font-bold text-base">₹{userData.balance.toFixed(2)}</p>
-            </div>
-            <div>
-              <FaClipboardList className="text-blue-500 text-3xl mx-auto mb-2" />
-              <p className="text-gray-700 text-sm">Detail</p>
-              <p className="text-gray-900 font-bold text-base">--</p>
-            </div>
-            <div>
-              <FaFileAlt className="text-blue-500 text-3xl mx-auto mb-2" />
-              <p className="text-gray-700 text-sm">Rejected</p>
-              <p className="text-gray-900 font-bold text-base">₹0.00</p>
-            </div>
-          </div>
+          <p className="text-base text-gray-600">Balance</p>
         </div>
 
         {/* Navigation List */}

@@ -177,6 +177,7 @@ export default function RechargeReportPage() {
                                 <tr>
                                     <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">S No</th>
                                     <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">User ID</th>
+                                    <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Transaction ID</th>
                                     <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Amount</th>
                                     <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Date</th>
                                     <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Time</th>
@@ -189,6 +190,7 @@ export default function RechargeReportPage() {
                                     <tr key={recharge._id}>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{startRecharge + index}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{recharge.userId.userId}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{recharge.transactionId}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">₹{recharge.amount.toFixed(2)}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{new Date(recharge.createdAt).toLocaleDateString()}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{new Date(recharge.createdAt).toLocaleTimeString()}</td>

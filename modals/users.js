@@ -1,9 +1,19 @@
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
+    userId: {
+        type: String,
+        required: true,
+        unique: true
+    },
     name: {
         type: String,
         required: true
+    },
+    phone:{
+        type:String,
+        required: true,
+        unique: true
     },
     email: {
         type: String,
@@ -14,6 +24,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    paymentPassword: {
+        type: String,
+        required: true
+    },
     type: {
         type: String,
         enum: ['player', 'admin'],
@@ -21,7 +35,7 @@ const userSchema = new mongoose.Schema({
     },
     balance: {
         type: Number,
-        default: 0
+        default: 100
     },
     grabbedOrders: [{
         type: mongoose.Schema.Types.ObjectId,

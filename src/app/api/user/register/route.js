@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import connectToDatabase from "../../../../../configurations/mongoose.config";
 import { UserModal } from "../../../../../modals/users.js";
 import { createDocKey } from "@/utils/utility";
+import bcrypt from "bcryptjs";
 
 
 export async function POST(req) {
@@ -9,6 +10,8 @@ export async function POST(req) {
     try {
         await connectToDatabase();
         const { sponsorId, name, phone, email, password, paymentPassword } = await req.json();
+
+        console.log("REQUEST BODY =>", sponsorId, name, phone, email, password, paymentPassword);
 
         // Basic validation for request body fields
         if (!name || !phone || !email || !password || !paymentPassword) {
@@ -63,15 +66,29 @@ export async function POST(req) {
 
         const lastUser = await UserModal.findOne({}).sort({ createdAt: -1 });
 
+        // Generate new userId
+        let newUserId;
+        if (!lastUser) {
+            newUserId = "MSH101";
+        } else {
+            // Extract the number from the last userId and increment it
+            const lastNumber = parseInt(lastUser.userId.replace("MSH", ""));
+            newUserId = `MSH${lastNumber + 1}`;
+        }
+
+        // Hash passwords
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPaymentPassword = await bcrypt.hash(paymentPassword, 10);
+
         // Create new user
         const newUser = new UserModal({
-            userId: createDocKey(lastUser.userId) || "MSH101",
+            userId: newUserId,
             sponsorId: sponsor._id,
             name,
             phone,
             email,
-            password,
-            paymentPassword,
+            password: hashedPassword,
+            paymentPassword: hashedPaymentPassword,
         });
 
         response.data = await newUser.save();

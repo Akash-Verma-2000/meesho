@@ -12,11 +12,37 @@ import { toast } from 'react-toastify';
 export default function Home() {
   const router = useRouter();
   const [userData, setUserData] = useState(null);
+  const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const partnerLogos = Array(6).fill("/images/Brand-Image.jpg");
+  const partnerLogos = ["/images/Bank1.png", "/images/Bank2.png", "/images/Bank3.png", "/images/Bank4.png", "/images/Bank5.png", "/images/Bank6.png"];
 
   useEffect(() => {
+    const fetchDashboardData = async (token) => {
+      try {
+        const res = await fetch('/api/user/dashboard', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        const data = await res.json();
+
+        if (data.status === 'success') {
+          setDashboardData(data.data);
+        } else {
+          setError(data.message || 'Failed to fetch dashboard data.');
+          toast.error(data.message || 'Failed to fetch dashboard data.', { position: "top-right" });
+        }
+      } catch (err) {
+        console.error('Error fetching dashboard data:', err);
+        setError('An unexpected error occurred while fetching dashboard data.');
+        toast.error('An unexpected error occurred while fetching dashboard data.', { position: "top-right" });
+      }
+    };
+
     const fetchUserProfile = async () => {
       setLoading(true);
       setError(null);
@@ -40,6 +66,7 @@ export default function Home() {
 
         if (data.status === 'success') {
           setUserData(data.data);
+          fetchDashboardData(token);
         } else {
           setError(data.message || 'Failed to fetch user profile.');
           toast.error(data.message || 'Failed to fetch user profile.', { position: "top-right" });
@@ -153,7 +180,7 @@ export default function Home() {
               <p className="text-xl sm:text-2xl font-extrabold text-gray-900">{userData.name}</p>
               <div className="flex items-center gap-3">
                 <span className="text-gray-700 text-base sm:text-lg font-medium">{userData.userId}</span>
-                <FaRegCopy 
+                <FaRegCopy
                   className="text-gray-600 cursor-pointer text-lg hover:text-blue-600 transition-colors duration-200"
                   onClick={handleCopyLink}
                 />
@@ -166,23 +193,15 @@ export default function Home() {
               </div>
               <div className="text-right">
                 <p className="text-gray-700 text-sm sm:text-base mb-1">Total Commission</p>
-                <p className="text-2xl sm:text-3xl font-bold text-gray-900">₹100.00</p>
+                <p className="text-2xl sm:text-3xl font-bold text-gray-900">₹{dashboardData?.totalEarnings?.toFixed(2) || '0.00'}</p>
               </div>
               <div>
-                <p className="text-gray-700 text-xs sm:text-sm mb-1">Today Earnings</p>
-                <p className="text-base sm:text-lg text-gray-800 font-medium">₹0.00</p>
+                <p className="text-gray-700 text-xs sm:text-sm mb-1">Today Recharge</p>
+                <p className="text-base sm:text-lg text-gray-800 font-medium">₹{dashboardData?.totalRecharge?.toFixed(2) || '0.00'}</p>
               </div>
               <div className="text-right">
-                <p className="text-gray-700 text-xs sm:text-sm mb-1">Today's Withdrawal</p>
-                <p className="text-base sm:text-lg text-gray-800 font-medium">₹0.00</p>
-              </div>
-              <div>
-                <p className="text-gray-700 text-xs sm:text-sm mb-1">Yesterday's Earnings</p>
-                <p className="text-base sm:text-lg text-gray-800 font-medium">₹0.00</p>
-              </div>
-              <div className="text-right">
-                <p className="text-gray-700 text-xs sm:text-sm mb-1">Yesterday's withdrawal</p>
-                <p className="text-base sm:text-lg text-gray-800 font-medium">₹0.00</p>
+                <p className="text-gray-700 text-xs sm:text-sm mb-1">Total Withdrawal</p>
+                <p className="text-base sm:text-lg text-gray-800 font-medium">₹{dashboardData?.totalWithdrawals?.toFixed(2) || '0.00'}</p>
               </div>
             </div>
           </div>

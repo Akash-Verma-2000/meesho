@@ -56,6 +56,14 @@ export default function RechargePage() {
     }
   };
 
+  const handleAmountButtonClick = (amount) => {
+    setRechargeData(prev => ({
+      ...prev,
+      amount: amount.toString()
+    }));
+    setErrors(prev => ({ ...prev, amount: '' }));
+  };
+
   const validateForm = () => {
       const newErrors = {};
       if (!rechargeData.amount) {
@@ -164,6 +172,21 @@ export default function RechargePage() {
         <div className="bg-white mx-5 md:mx-10 lg:mx-20 mt-6 rounded-xl shadow-lg overflow-hidden">
           <form onSubmit={handleSubmit} className="p-1 md:px-5 py-5 lg:py-10">
             <div className="space-y-4">
+              {/* Amount Buttons */}
+              <div className="grid grid-cols-3 gap-3 p-3 bg-gray-50 rounded-lg mb-4">
+                {[100, 300, 500, 1000, 3000, 5000, 10000, 20000, 30000, 50000, 80000, 100000].map((amount) => (
+                  <button
+                    key={amount}
+                    type="button"
+                    onClick={() => handleAmountButtonClick(amount)}
+                    className="p-3 border border-blue-300 rounded-md text-blue-700 font-semibold text-lg hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+                    disabled={loading}
+                  >
+                    {amount}.00
+                  </button>
+                ))}
+              </div>
+
               {/* Amount */}
               <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
                 <FaMoneyBillWave className="text-blue-500 text-xl" />

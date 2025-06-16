@@ -178,6 +178,7 @@ export default function WithdrawalReportPage() {
                                     <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">S No</th>
                                     <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">User ID</th>
                                     <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Amount</th>
+                                    <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Deducted Amount</th>
                                     <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Date</th>
                                     <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Time</th>
                                     <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Status</th>
@@ -190,11 +191,12 @@ export default function WithdrawalReportPage() {
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{startWithdrawal + index}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{withdrawal.userId.userId}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">₹{withdrawal.amount.toFixed(2)}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">₹{Number((Number(withdrawal.amount)) - (Number(withdrawal.amount) * 5 / 100)).toFixed(2)}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{new Date(withdrawal.createdAt).toLocaleDateString()}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{new Date(withdrawal.createdAt).toLocaleTimeString()}</td>
                                         <td className={`px-6 py-4 whitespace-nowrap text-sm font-semibold ${withdrawal.status === 'approved' ? 'text-green-600' :
-                                                withdrawal.status === 'pending' ? 'text-yellow-600' :
-                                                    'text-red-600'
+                                            withdrawal.status === 'pending' ? 'text-yellow-600' :
+                                                'text-red-600'
                                             }`}>
                                             {withdrawal.status.charAt(0).toUpperCase() + withdrawal.status.slice(1)}
                                         </td>
@@ -242,8 +244,8 @@ export default function WithdrawalReportPage() {
                                     <div className="flex justify-between items-center mb-2">
                                         <span className="text-sm font-medium text-gray-500">Status:</span>
                                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${withdrawal.status === 'approved' ? 'bg-green-100 text-green-800' :
-                                                withdrawal.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                                    'bg-red-100 text-red-800'
+                                            withdrawal.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                                'bg-red-100 text-red-800'
                                             }`}>
                                             {withdrawal.status.charAt(0).toUpperCase() + withdrawal.status.slice(1)}
                                         </span>

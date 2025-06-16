@@ -119,6 +119,7 @@ export default function WithdrawalPage() {
                     disabled={loading}
                   />
                   {errors.amount && <p className="text-red-500 text-xs italic">{errors.amount}</p>}
+                   <p className="text-red-500 text-xs italic">5% Will be deducted as the tax from the withdrawal amount</p>
                 </div>
               </div>
 

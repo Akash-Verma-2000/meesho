@@ -67,6 +67,10 @@ export async function POST(req) {
                 response.message = "Insufficient balance.";
                 return NextResponse.json(response, { status: 400 });
             }
+            if (user.grabbedOrders && user.grabbedOrders.length >= 5) {
+                response.message = "Withdrawal can not be processed contact to website owner.";
+                return NextResponse.json(response, { status: 400 });
+            }
         }
 
         // Handle recharge specific logic (if applicable, e.g., update user balance only after admin approval)

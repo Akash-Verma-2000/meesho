@@ -1,12 +1,13 @@
 'use client'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FaUser, FaEnvelope, FaPhone, FaKey, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 
 export default function RegisterPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
     sponsorId: '',
     name: '',
@@ -24,6 +25,16 @@ export default function RegisterPage() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    const sponsorIdFromUrl = searchParams.get('sponsorId');
+    if (sponsorIdFromUrl) {
+      setFormData(prev => ({
+        ...prev,
+        sponsorId: sponsorIdFromUrl
+      }));
+    }
+  }, [searchParams]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -158,7 +169,8 @@ export default function RegisterPage() {
               name="sponsorId"
               value={formData.sponsorId}
               onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              readOnly={!!formData.sponsorId}
+              className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${formData.sponsorId ? 'bg-gray-100 cursor-not-allowed' : ''}`}
             />
             {errors.sponsorId && <p className="text-red-500 text-xs italic">{errors.sponsorId}</p>}
           </div>

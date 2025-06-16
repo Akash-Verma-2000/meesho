@@ -53,6 +53,12 @@ export async function POST(req) {
             return NextResponse.json(response, { status: 404 });
         }
 
+        // Check if user has sufficient balance
+        if (user.balance < order.price) {
+            response.message = "Insufficient balance";
+            return NextResponse.json(response, { status: 400 });
+        }
+
         console.log("Before update - User grabbed orders:", user.grabbedOrders);
         console.log("Order ID to add:", orderId);
 

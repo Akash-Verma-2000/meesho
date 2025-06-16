@@ -24,30 +24,12 @@ export async function GET(req) {
             return NextResponse.json(response, { status: 401 });
         }
 
-        // Get today's date at midnight
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        // Get yesterday's date at midnight
-        const yesterday = new Date(today);
-        yesterday.setDate(yesterday.getDate() - 1);
-
-        // Get tomorrow's date at midnight (for date range queries)
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-
-        const dayBeforeYesterday = new Date(yesterday);
-        dayBeforeYesterday.setDate(dayBeforeYesterday.getDate() - 1);
 
         // Calculate today's earnings
-        const todayEarnings = await CommissionModal.aggregate([
+        const totalEarnings = await CommissionModal.aggregate([
             {
                 $match: {
                     userId: new mongoose.Types.ObjectId(decodedToken._id),
-                    createdAt: {
-                        $gte: today,
-                        $lt: tomorrow
-                    }
                 }
             },
             {
@@ -58,35 +40,12 @@ export async function GET(req) {
             }
         ]);
 
-        // Calculate yesterday's earnings
-        const yesterdayEarnings = await CommissionModal.aggregate([
-            {
-                $match: {
-                    userId: new mongoose.Types.ObjectId(decodedToken._id),
-                    createdAt: {
-                        $gte: yesterday,
-                        $lt: today
-                    }
-                }
-            },
-            {
-                $group: {
-                    _id: null,
-                    total: { $sum: '$commission' }
-                }
-            }
-        ]);
-
-        // Calculate today's withdrawals
-        const todayWithdrawals = await TransactionModal.aggregate([
+        const totalWithdrawals = await TransactionNodal.aggregate([
             {
                 $match: {
                     userId: new mongoose.Types.ObjectId(decodedToken._id),
                     type: 'withdraw',
-                    createdAt: {
-                        $gte: today,
-                        $lt: tomorrow
-                    }
+                    status: 'approved'
                 }
             },
             {
@@ -97,16 +56,14 @@ export async function GET(req) {
             }
         ]);
 
-        // Calculate yesterday's withdrawals
-        const yesterdayWithdrawals = await TransactionModal.aggregate([
+        console.log("WITHDRAWAL =>", totalWithdrawals);
+
+        const totalRecharge = await TransactionNodal.aggregate([
             {
                 $match: {
                     userId: new mongoose.Types.ObjectId(decodedToken._id),
-                    type: 'withdraw',
-                    createdAt: {
-                        $gte: yesterday,
-                        $lt: today
-                    }
+                    type: 'recharge',
+                    status: 'approved'
                 }
             },
             {
@@ -119,11 +76,11 @@ export async function GET(req) {
 
         response.status = "success";
         response.message = "Dashboard data fetched successfully";
+        response.error = "";
         response.data = {
-            todayEarnings: todayEarnings[0]?.total || 0,
-            yesterdayEarnings: yesterdayEarnings[0]?.total || 0,
-            todayWithdrawals: todayWithdrawals[0]?.total || 0,
-            yesterdayWithdrawals: yesterdayWithdrawals[0]?.total || 0
+            totalEarnings: totalEarnings[0]?.total || 0,
+            totalWithdrawals: totalWithdrawals[0]?.total || 0,
+            totalRecharge: totalRecharge[0]?.total || 0,
         };
 
         return NextResponse.json(response, { status: 200 });
