@@ -1,6 +1,16 @@
 import { FaBars } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 export default function AdminTopBar({ setSidebarOpen }) {
+    const router = useRouter();
+
+    const handleLogout = () => {
+        sessionStorage.removeItem('jwtToken'); // Clear the token
+        toast.success('Logged out successfully!', { position: "top-right" });
+        router.push('/admin-login'); // Redirect to admin login page
+    };
+
     return (
         <div className="flex justify-between items-center w-full md:justify-end">
             <button
@@ -10,6 +20,7 @@ export default function AdminTopBar({ setSidebarOpen }) {
                 <FaBars className="h-6 w-6" />
             </button>
             <button
+                onClick={handleLogout}
                 className="flex items-center px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-200"
             >
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

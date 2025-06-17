@@ -83,15 +83,7 @@ export default function Page() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
             <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-                <div className="flex justify-center mb-6">
-                    <Image
-                        src="/images/logo.png" // Assuming you have a logo at this path
-                        alt="Logo"
-                        width={80}
-                        height={80}
-                        priority
-                    />
-                </div>
+               
                 <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Admin Login</h2>
 
                 <form onSubmit={handleSubmit} className="space-y-5">
