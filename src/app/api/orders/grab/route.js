@@ -79,12 +79,6 @@ export async function POST(req) {
         user.grabbedOrders = [...(user.grabbedOrders || []), orderObjectId];
         await user.save();
 
-        console.log("Updated user:", {
-            userId: user._id,
-            newBalance: user.balance,
-            grabbedOrders: user.grabbedOrders
-        });
-
         // Record the commission transaction
         const commissionRecord = new CommissionModal({
             userId: user._id,
@@ -93,15 +87,6 @@ export async function POST(req) {
         });
         await commissionRecord.save();
 
-        console.log("Commission record created:", {
-            commissionId: commissionRecord._id,
-            userId: commissionRecord.userId,
-            orderId: commissionRecord.orderId,
-            commission: commissionRecord.commission
-        });
-
-        console.log("After update - User grabbed orders:", user.grabbedOrders);
-        console.log("Commission recorded:", commissionRecord);
 
         // Generate new token with updated grabbedOrders
         const newToken = jwt.sign(
@@ -114,8 +99,6 @@ export async function POST(req) {
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
         );
-
-        console.log("New token generated with grabbed orders:", user.grabbedOrders);
 
         response.status = "success";
         response.message = `Successfully grabbed order! Commission of ₹${commissionAmount.toFixed(2)} added to your balance.`;

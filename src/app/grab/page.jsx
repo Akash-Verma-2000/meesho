@@ -5,12 +5,14 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
+import { FaTimes } from 'react-icons/fa';
 
 export default function GrabPage() {
     const router = useRouter();
     const [order, setOrder] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showInsufficientBalancePopup, setShowInsufficientBalancePopup] = useState(false);
 
     useEffect(() => {
         fetchNextOrder();
@@ -92,7 +94,12 @@ export default function GrabPage() {
                     router.push('/login');
                     return;
                 }
-                toast.error(data.message || 'Failed to grab order', { position: "top-right" });
+                if (data.message == 'Insufficient balance') {
+                    setShowInsufficientBalancePopup(true);
+                }
+                if (data.message != 'Insufficient balance') {
+                    toast.error(data.message || 'Failed to grab order', { position: "top-right" });
+                }
             }
         } catch (err) {
             console.error('Error grabbing order:', err);
@@ -105,9 +112,8 @@ export default function GrabPage() {
     if (loading) {
         return (
             <WebsiteLayout>
-
-                <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-                    <p>Loading...</p>
+                <div className="min-h-screen flex items-center justify-center">
+                    <p>Loading order...</p>
                 </div>
             </WebsiteLayout>
         );
@@ -138,6 +144,31 @@ export default function GrabPage() {
 
     return (
         <WebsiteLayout>
+            {showInsufficientBalancePopup && (
+                <div className="fixed inset-0 bg-black/80 bg-opacity-50 flex items-center justify-center  z-50">
+                    <div className="bg-white p-6 rounded-lg shadow-xl text-center relative m-5">
+                        <button
+                            onClick={() => setShowInsufficientBalancePopup(false)}
+                            className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 focus:outline-none"
+                        >
+                            <FaTimes className="text-xl" />
+                        </button>
+                        <h3 className="text-lg font-bold text-gray-800 mb-4">Insufficient Balance</h3>
+                        <p className="text-gray-600 mb-6">
+                            You do not have enough balance to grab the orders, Please recharge to continue.
+                        </p>
+                        <button
+                            onClick={() => {
+                                setShowInsufficientBalancePopup(false);
+                                router.push('/recharge');
+                            }}
+                            className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
+                        >
+                            Recharge Now
+                        </button>
+                    </div>
+                </div>
+            )}
             <div className="min-h-screen bg-gray-100 py-8">
                 <div className="max-w-2xl mx-auto px-4">
                     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
