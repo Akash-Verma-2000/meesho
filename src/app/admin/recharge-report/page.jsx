@@ -189,22 +189,23 @@ export default function RechargeReportPage() {
                                 {recharges.map((recharge, index) => (
                                     <tr key={recharge._id}>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{startRecharge + index}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{recharge.userId.userId}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{recharge.transactionId}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">₹{recharge.amount.toFixed(2)}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{new Date(recharge.createdAt).toLocaleDateString()}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{new Date(recharge.createdAt).toLocaleTimeString()}</td>
-                                        <td className={`px-6 py-4 whitespace-nowrap text-sm font-semibold ${
-                                            recharge.status === 'approved' ? 'text-green-600' :
-                                            recharge.status === 'pending' ? 'text-yellow-600' :
-                                            'text-red-600'
-                                        }`}>
-                                            {recharge.status.charAt(0).toUpperCase() + recharge.status.slice(1)}
+
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{recharge?.userId?.userId}</td>
+
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{recharge?.transactionId}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">₹{recharge?.amount.toFixed(2)}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{new Date(recharge?.createdAt).toLocaleDateString()}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{new Date(recharge?.createdAt).toLocaleTimeString()}</td>
+                                        <td className={`px-6 py-4 whitespace-nowrap text-sm font-semibold ${recharge?.status === 'approved' ? 'text-green-600' :
+                                            recharge?.status === 'pending' ? 'text-yellow-600' :
+                                                'text-red-600'
+                                            }`}>
+                                            {recharge?.status?.charAt(0)?.toUpperCase() + recharge?.status?.slice(1)}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                             <select
-                                                value={recharge.status}
-                                                onChange={(e) => handleStatusChange(recharge._id, e.target.value)}
+                                                value={recharge?.status}
+                                                onChange={(e) => handleStatusChange(recharge?._id, e.target.value)}
                                                 className="border border-gray-300 rounded-md p-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 disabled={loading}
                                             >
@@ -228,28 +229,27 @@ export default function RechargeReportPage() {
                                     </div>
                                     <div className="flex justify-between items-center mb-2">
                                         <span className="text-sm font-medium text-gray-500">User ID:</span>
-                                        <span className="text-sm text-gray-700">{recharge.userId.userId}</span>
+                                        <span className="text-sm text-gray-700">{recharge?.userId?.userId}</span>
                                     </div>
                                     <div className="flex justify-between items-center mb-2">
                                         <span className="text-sm font-medium text-gray-500">Amount:</span>
-                                        <span className="text-sm text-gray-700">₹{recharge.amount.toFixed(2)}</span>
+                                        <span className="text-sm text-gray-700">₹{recharge?.amount.toFixed(2)}</span>
                                     </div>
                                     <div className="flex justify-between items-center mb-2">
                                         <span className="text-sm font-medium text-gray-500">Date:</span>
-                                        <span className="text-sm text-gray-700">{new Date(recharge.createdAt).toLocaleDateString()}</span>
+                                        <span className="text-sm text-gray-700">{new Date(recharge?.createdAt).toLocaleDateString()}</span>
                                     </div>
                                     <div className="flex justify-between items-center mb-2">
                                         <span className="text-sm font-medium text-gray-500">Time:</span>
-                                        <span className="text-sm text-gray-700">{new Date(recharge.createdAt).toLocaleTimeString()}</span>
+                                        <span className="text-sm text-gray-700">{new Date(recharge?.createdAt).toLocaleTimeString()}</span>
                                     </div>
                                     <div className="flex justify-between items-center mb-2">
                                         <span className="text-sm font-medium text-gray-500">Status:</span>
-                                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                            recharge.status === 'approved' ? 'bg-green-100 text-green-800' :
-                                            recharge.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                            'bg-red-100 text-red-800'
-                                        }`}>
-                                            {recharge.status.charAt(0).toUpperCase() + recharge.status.slice(1)}
+                                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${recharge?.status === 'approved' ? 'bg-green-100 text-green-800' :
+                                            recharge?.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                                'bg-red-100 text-red-800'
+                                            }`}>
+                                            {recharge?.status.charAt(0).toUpperCase() + recharge?.status.slice(1)}
                                         </span>
                                     </div>
                                     <div className="flex justify-between items-center">
