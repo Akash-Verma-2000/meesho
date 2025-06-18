@@ -109,14 +109,22 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-200 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white px-5 py-10 md:px-10 md:py-14 rounded-xl shadow-lg">
+    <div
+      className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-cover bg-center"
+      style={{
+        backgroundImage: "url('/images/login.jpg')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
+      <div className="max-w-md w-full space-y-8 bg-black/80 bg-opacity-90 px-5 py-10 md:px-10 md:py-14 rounded-xl shadow-lg">
         {/* Header */}
         <div className="text-center">
-          <h2 className="text-3xl font-extrabold text-gray-900">
+          <h2 className="text-3xl font-extrabold text-white">
             Welcome Back
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-white">
             Please sign in to your account
           </p>
         </div>
@@ -131,7 +139,7 @@ export default function LoginPage() {
 
           {/* Email Field */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="email" className="block text-sm font-medium text-white">
               Email address
             </label>
             <div className="mt-1 relative">
@@ -159,7 +167,7 @@ export default function LoginPage() {
 
           {/* Password Field */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="password" className="block text-sm font-medium text-white">
               Password
             </label>
             <div className="mt-1 relative">
@@ -198,7 +206,7 @@ export default function LoginPage() {
           <div className="flex items-center justify-between">
            
             <div className="text-sm">
-              <Link href="/forgot-password" className="font-medium text-blue-600 hover:text-blue-500">
+              <Link href="/forgot-password" className="font-medium text-white hover:text-blue-500">
                 Forgot your password?
               </Link>
             </div>
@@ -217,7 +225,7 @@ export default function LoginPage() {
 
           {/* Sign up link */}
           <div className="text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-white">
               Don't have an account?{' '}
               <Link href="/register" className="font-medium text-blue-600 hover:text-blue-500">
                 Sign up

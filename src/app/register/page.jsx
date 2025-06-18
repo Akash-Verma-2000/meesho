@@ -157,26 +157,33 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-200 p-5 md:p-10 lg:p-20">
-      <div className="max-w-md w-full space-y-8 bg-white px-5 py-10 md:px-10 md:py-14 rounded-xl shadow-lg">
-        <h2 className="text-2xl font-bold text-center mb-6">Register</h2>
+    <div
+      className="min-h-screen flex items-center justify-center bg-cover bg-center p-5 md:p-10 lg:p-20"
+      style={{
+        backgroundImage: "url('/images/login.jpg')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
+      <div className="max-w-md w-full space-y-8 bg-black/80 bg-opacity-90 px-5 py-10 md:px-10 md:py-14 rounded-xl shadow-lg">
+        <h2 className="text-2xl font-bold text-center mb-6 text-white">Register</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="sponsorId" className="block text-gray-700 text-sm font-bold mb-2">Sponsor ID:</label>
+            <label htmlFor="sponsorId" className="block text-white text-sm font-bold mb-2">Sponsor ID:</label>
             <input
               type="text"
               id="sponsorId"
               name="sponsorId"
               value={formData.sponsorId}
               onChange={handleChange}
-              readOnly={!!formData.sponsorId}
               className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${formData.sponsorId ? 'bg-gray-100 cursor-not-allowed' : ''}`}
             />
             {errors.sponsorId && <p className="text-red-500 text-xs italic">{errors.sponsorId}</p>}
           </div>
 
           <div className="mb-4">
-            <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">Name:</label>
+            <label htmlFor="name" className="block text-white text-sm font-bold mb-2">Name:</label>
             <input
               type="text"
               id="name"
@@ -189,7 +196,7 @@ export default function RegisterPage() {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="phone" className="block text-gray-700 text-sm font-bold mb-2">Phone:</label>
+            <label htmlFor="phone" className="block text-white text-sm font-bold mb-2">Phone:</label>
             <input
               type="text"
               id="phone"
@@ -202,7 +209,7 @@ export default function RegisterPage() {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+            <label htmlFor="email" className="block text-white text-sm font-bold mb-2">Email:</label>
             <input
               type="email"
               id="email"
@@ -215,7 +222,7 @@ export default function RegisterPage() {
           </div>
 
           <div className="mb-4 relative">
-            <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+            <label htmlFor="password" className="block text-white text-sm font-bold mb-2">Password:</label>
             <input
               type={showPassword ? 'text' : 'password'}
               id="password"
@@ -235,7 +242,7 @@ export default function RegisterPage() {
           </div>
 
           <div className="mb-4 relative">
-            <label htmlFor="confirmPassword" className="block text-gray-700 text-sm font-bold mb-2">Confirm Password:</label>
+            <label htmlFor="confirmPassword" className="block text-white text-sm font-bold mb-2">Confirm Password:</label>
             <input
               type={showConfirmPassword ? 'text' : 'password'}
               id="confirmPassword"
@@ -255,7 +262,7 @@ export default function RegisterPage() {
           </div>
 
           <div className="mb-4 relative">
-            <label htmlFor="paymentPassword" className="block text-gray-700 text-sm font-bold mb-2">Payment Password:</label>
+            <label htmlFor="paymentPassword" className="block text-white text-sm font-bold mb-2">Payment Password:</label>
             <input
               type={showPaymentPassword ? 'text' : 'password'}
               id="paymentPassword"
@@ -275,7 +282,7 @@ export default function RegisterPage() {
           </div>
 
           <div className="mb-6 relative">
-            <label htmlFor="confirmPaymentPassword" className="block text-gray-700 text-sm font-bold mb-2">Confirm Payment Password:</label>
+            <label htmlFor="confirmPaymentPassword" className="block text-white text-sm font-bold mb-2">Confirm Payment Password:</label>
             <input
               type={showConfirmPaymentPassword ? 'text' : 'password'}
               id="confirmPaymentPassword"

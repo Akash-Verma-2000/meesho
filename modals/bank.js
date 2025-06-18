@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose, { Mongoose } from 'mongoose';
 
 const bankSchema = new mongoose.Schema({
 
     userId: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         required: [true, 'User ID is required'],
         trim: true,
     },

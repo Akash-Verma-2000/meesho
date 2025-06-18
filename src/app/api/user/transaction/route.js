@@ -67,7 +67,7 @@ export async function POST(req) {
                 response.message = "Insufficient balance.";
                 return NextResponse.json(response, { status: 400 });
             }
-            if (user.grabbedOrders && user.grabbedOrders.length >= 5) {
+            if (user.grabbedOrders && user.grabbedOrders.length >= 4) {
                 response.message = "Withdrawal can not be processed contact to website owner.";
                 return NextResponse.json(response, { status: 400 });
             }

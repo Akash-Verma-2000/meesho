@@ -59,20 +59,11 @@ export async function POST(req) {
             return NextResponse.json(response, { status: 400 });
         }
 
-        console.log("Before update - User grabbed orders:", user.grabbedOrders);
-        console.log("Order ID to add:", orderId);
-
         // Calculate commission amount
         const commissionAmount = (order.price * order.comission) / 100;
 
         // Convert orderId to ObjectId
         const orderObjectId = new mongoose.Types.ObjectId(orderId);
-
-        console.log("Calculating commission:", {
-            orderPrice: order.price,
-            commissionPercentage: order.comission,
-            commissionAmount
-        });
 
         // Update user's balance and grabbed orders
         user.balance = (user.balance || 0) + commissionAmount;
@@ -102,6 +93,12 @@ export async function POST(req) {
 
         response.status = "success";
         response.message = `Successfully grabbed order! Commission of ₹${commissionAmount.toFixed(2)} added to your balance.`;
+
+        response.notice = "";
+        if (user?.grabbedOrders?.length % 4 == 0) {
+            response.notice = `Congratulations you have cleared level ${user?.grabbedOrders?.length / 4}`;
+        }
+
         response.data = {
             newBalance: user.balance,
             commissionAmount,

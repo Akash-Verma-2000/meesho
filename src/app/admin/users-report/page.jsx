@@ -1,6 +1,6 @@
 'use client'
 import WebsiteLayout from '@/components/WebsiteLayout';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FaFileAlt, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
@@ -13,6 +13,12 @@ export default function UserReportPage() {
     const [totalUsers, setTotalUsers] = useState(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [bankModalOpen, setBankModalOpen] = useState(false);
+    const [bankDetails, setBankDetails] = useState(null);
+    const [bankLoading, setBankLoading] = useState(false);
+    const [bankError, setBankError] = useState(null);
+    const [selectedUserId, setSelectedUserId] = useState(null);
+    const modalRef = useRef();
 
     useEffect(() => {
         fetchUsers();
@@ -98,6 +104,44 @@ export default function UserReportPage() {
         }
     };
 
+    const handleViewBank = async (userId) => {
+        setSelectedUserId(userId);
+        setBankModalOpen(true);
+        setBankDetails(null);
+        setBankError(null);
+        setBankLoading(true);
+        try {
+            const token = sessionStorage.getItem('jwtToken');
+            if (!token) {
+                toast.error('No authentication token found. Please log in as admin.', { position: "top-right" });
+                router.push('/admin-login');
+                return;
+            }
+            const res = await fetch(`/api/admin/user-bank-details?userId=${userId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+            const data = await res.json();
+            if (data.status === 'success') {
+                setBankDetails(data.data);
+            } else {
+                setBankError(data.message || 'Failed to fetch bank details.');
+            }
+        } catch (err) {
+            setBankError('An unexpected error occurred while fetching bank details.');
+        } finally {
+            setBankLoading(false);
+        }
+    };
+
+    const closeBankModal = () => {
+        setBankModalOpen(false);
+        setBankDetails(null);
+        setBankError(null);
+        setSelectedUserId(null);
+    };
+
     const totalPages = Math.ceil(totalUsers / usersPerPage);
 
     const handleNextPage = () => {
@@ -134,6 +178,31 @@ export default function UserReportPage() {
 
     return (
         <>
+            {/* Bank Details Modal */}
+            {bankModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 bg-opacity-40">
+                    <div ref={modalRef} className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative animate-fadeIn m-5">
+                        <button onClick={closeBankModal} className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+                        <h2 className="text-lg font-bold mb-4 text-center">Bank Details</h2>
+                        {bankLoading ? (
+                            <div className="text-center py-8">Loading bank details...</div>
+                        ) : bankError ? (
+                            <div className="text-center text-red-600 py-8">{bankError}</div>
+                        ) : bankDetails ? (
+                            <div className="space-y-2">
+                                <div><span className="font-semibold">Account Holder Name:</span> {bankDetails.accountHolderName}</div>
+                                <div><span className="font-semibold">Bank Name:</span> {bankDetails.bankName}</div>
+                                <div><span className="font-semibold">Branch Name:</span> {bankDetails.branchName}</div>
+                                <div><span className="font-semibold">Account Number:</span> {bankDetails.accountNumber}</div>
+                                <div><span className="font-semibold">IFSC Code:</span> {bankDetails.ifscCode}</div>
+                                <div><span className="font-semibold">Account Type:</span> {bankDetails.type}</div>
+                            </div>
+                        ) : (
+                            <div className="text-center py-8 text-gray-500">No bank details found for this user.</div>
+                        )}
+                    </div>
+                </div>
+            )}
             <div className="min-h-screen bg-gray-100 pb-20">
                 {/* Header */}
                 <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-5 mb-5 text-center text-xl font-bold shadow-lg">
@@ -177,14 +246,20 @@ export default function UserReportPage() {
                                                 }`}>
                                                 {user.isBlocked ? 'Blocked' : 'Active'}
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 flex gap-2">
                                                 <button
                                                     onClick={() => handleToggleBlock(user._id, user.isBlocked)}
-                                                    className={`py-1 px-3 rounded-md text-white text-xs font-semibold ${user.isBlocked ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'
-                                                        }`}
+                                                    className={`py-1 px-3 rounded-md text-white text-xs font-semibold ${user.isBlocked ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'}`}
                                                     disabled={loading}
                                                 >
                                                     {user.isBlocked ? 'Unblock' : 'Block'}
+                                                </button>
+                                                <button
+                                                    onClick={() => handleViewBank(user._id)}
+                                                    className="py-1 px-3 rounded-md text-white text-xs font-semibold bg-blue-500 hover:bg-blue-600"
+                                                    disabled={bankLoading}
+                                                >
+                                                    View Bank
                                                 </button>
                                             </td>
                                         </tr>
@@ -233,14 +308,22 @@ export default function UserReportPage() {
                                         </div>
                                         <div className="flex justify-between items-center">
                                             <span className="text-sm font-medium text-gray-500">Actions:</span>
-                                            <button
-                                                onClick={() => handleToggleBlock(user._id, user.isBlocked)}
-                                                className={`py-1 px-3 rounded-md text-white text-xs font-semibold ${user.isBlocked ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'
-                                                    }`}
-                                                disabled={loading}
-                                            >
-                                                {user.isBlocked ? 'Unblock' : 'Block'}
-                                            </button>
+                                            <div className="flex gap-2">
+                                                <button
+                                                    onClick={() => handleToggleBlock(user._id, user.isBlocked)}
+                                                    className={`py-1 px-3 rounded-md text-white text-xs font-semibold ${user.isBlocked ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'}`}
+                                                    disabled={loading}
+                                                >
+                                                    {user.isBlocked ? 'Unblock' : 'Block'}
+                                                </button>
+                                                <button
+                                                    onClick={() => handleViewBank(user._id)}
+                                                    className="py-1 px-3 rounded-md text-white text-xs font-semibold bg-blue-500 hover:bg-blue-600"
+                                                    disabled={bankLoading}
+                                                >
+                                                    View Bank
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 ))}

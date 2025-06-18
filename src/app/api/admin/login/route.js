@@ -52,7 +52,7 @@ export async function POST(req) {
         return NextResponse.json(response, { status: 200 });
 
     } catch (error) {
-        console.error("Admin Login API error:", error);
+        console.log("Admin Login API error:", error);
         response.error = error.message;
         return NextResponse.json(response, { status: 500 });
     }

@@ -13,6 +13,7 @@ export default function GrabPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showInsufficientBalancePopup, setShowInsufficientBalancePopup] = useState(false);
+    const [notice, setNotice] = useState("");
 
     useEffect(() => {
         fetchNextOrder();
@@ -85,6 +86,7 @@ export default function GrabPage() {
                 if (data.data.token) {
                     sessionStorage.setItem('jwtToken', data.data.token);
                 }
+                setNotice(data.notice);
                 toast.success(data.message, { position: "top-right" });
                 // Fetch the next order
                 fetchNextOrder();
@@ -132,6 +134,12 @@ export default function GrabPage() {
     if (!order) {
         return (
             <WebsiteLayout>
+                {
+                    notice ?
+                        <div className='bg-green-500'>
+                            <p className='text-white text-2xl font-semibold text-center m-5 p-5'>{notice}</p>
+                        </div> : null
+                }
                 <div className="min-h-screen bg-gray-100 flex items-center justify-center">
                     <div className="text-center">
                         <h2 className="text-2xl font-semibold text-gray-800 mb-2">No Orders Available</h2>
@@ -144,6 +152,13 @@ export default function GrabPage() {
 
     return (
         <WebsiteLayout>
+            {
+                notice ?
+                    <div className='bg-green-500'>
+                        <p className='text-white text-2xl font-semibold text-center m-5 p-5'>{notice}</p>
+                    </div> : null
+            }
+
             {showInsufficientBalancePopup && (
                 <div className="fixed inset-0 bg-black/80 bg-opacity-50 flex items-center justify-center  z-50">
                     <div className="bg-white p-6 rounded-lg shadow-xl text-center relative m-5">
@@ -194,7 +209,7 @@ export default function GrabPage() {
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-500">Commission</p>
-                                    <p className="text-xl font-semibold text-green-600">{order.comission.toFixed(2)}%</p>
+                                    <p className="text-xl font-semibold text-green-600">₹{(order.price * order.comission / 100)} ({order.comission}%)</p>
                                 </div>
                             </div>
 
