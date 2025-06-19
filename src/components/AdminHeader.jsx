@@ -11,7 +11,7 @@ export default function AdminHeader({ setSidebarOpen }) {
             </div>
 
             {/* Navigation */}
-            <nav className="mt-4 flex-1">
+            <nav className="pt-4 flex-1 shadow-lg">
                 <ul className="space-y-2 px-2">
                     <li>
                         <Link

@@ -36,7 +36,6 @@ export async function GET(req) {
 
         const totalUsers = await UserModal.countDocuments({ type: 'player' }); // Only count player users for reports
         const users = await UserModal.find({ type: 'player' })
-            .select('-password -paymentPassword') // Exclude sensitive information
             .populate('sponsorId', 'userId') // Populate sponsorId and select only the 'userId' field
             .sort({ createdAt: -1 })
             .skip(skip)

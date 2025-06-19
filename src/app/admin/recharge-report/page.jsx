@@ -232,6 +232,10 @@ export default function RechargeReportPage() {
                                         <span className="text-sm text-gray-700">{recharge?.userId?.userId}</span>
                                     </div>
                                     <div className="flex justify-between items-center mb-2">
+                                        <span className="text-sm font-medium text-gray-500">Transaction ID:</span>
+                                        <span className="text-sm text-gray-700">{recharge?.transactionId}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center mb-2">
                                         <span className="text-sm font-medium text-gray-500">Amount:</span>
                                         <span className="text-sm text-gray-700">₹{recharge?.amount.toFixed(2)}</span>
                                     </div>

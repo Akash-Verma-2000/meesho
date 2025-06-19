@@ -1,17 +1,12 @@
 import { NextResponse } from "next/server";
 import connectToDatabase from "../../../../../configurations/mongoose.config";
 import { UserModal } from "../../../../../modals/users.js";
-import { createDocKey } from "@/utils/utility";
-import bcrypt from "bcryptjs";
-
 
 export async function POST(req) {
     const response = { status: "error", message: "Something went wrong", data: {}, error: "Something went wrong" };
     try {
         await connectToDatabase();
         const { sponsorId, name, phone, email, password, paymentPassword } = await req.json();
-
-        console.log("REQUEST BODY =>", sponsorId, name, phone, email, password, paymentPassword);
 
         // Basic validation for request body fields
         if (!name || !phone || !email || !password || !paymentPassword) {
@@ -76,10 +71,6 @@ export async function POST(req) {
             newUserId = `MSH${lastNumber + 1}`;
         }
 
-        // Hash passwords
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const hashedPaymentPassword = await bcrypt.hash(paymentPassword, 10);
-
         // Create new user
         const newUser = new UserModal({
             userId: newUserId,
@@ -87,8 +78,8 @@ export async function POST(req) {
             name,
             phone,
             email,
-            password: hashedPassword,
-            paymentPassword: hashedPaymentPassword,
+            password: password,
+            paymentPassword: paymentPassword,
         });
 
         response.data = await newUser.save();

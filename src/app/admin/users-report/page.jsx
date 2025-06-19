@@ -225,6 +225,8 @@ export default function UserReportPage() {
                                         <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">User ID</th>
                                         <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Name</th>
                                         <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Email</th>
+                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Password</th>
+                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Payment Password</th>
                                         <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Phone</th>
                                         <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Sponsor ID</th>
                                         <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Balance</th>
@@ -239,6 +241,8 @@ export default function UserReportPage() {
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{user.userId}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{user.name}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{user.email}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{user.password}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{user.paymentPassword}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{user.phone}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{typeof user.sponsorId === 'object' ? user.sponsorId.userId : user.sponsorId || 'N/A'}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">₹{user.balance.toFixed(2)}</td>
@@ -286,6 +290,14 @@ export default function UserReportPage() {
                                         <div className="flex justify-between items-center mb-2">
                                             <span className="text-sm font-medium text-gray-500">Email:</span>
                                             <span className="text-sm text-gray-700">{user.email}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="text-sm font-medium text-gray-500">Password:</span>
+                                            <span className="text-sm text-gray-700">{user.password}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="text-sm font-medium text-gray-500">Payment Password:</span>
+                                            <span className="text-sm text-gray-700">{user.paymentPassword}</span>
                                         </div>
                                         <div className="flex justify-between items-center mb-2">
                                             <span className="text-sm font-medium text-gray-500">Phone:</span>

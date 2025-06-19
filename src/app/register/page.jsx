@@ -177,7 +177,7 @@ export default function RegisterPage() {
               name="sponsorId"
               value={formData.sponsorId}
               onChange={handleChange}
-              className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${formData.sponsorId ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+              className={`shadow bg-white appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${formData.sponsorId ? 'bg-gray-100' : ''}`}
             />
             {errors.sponsorId && <p className="text-red-500 text-xs italic">{errors.sponsorId}</p>}
           </div>
@@ -190,7 +190,7 @@ export default function RegisterPage() {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow bg-white  appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
             {errors.name && <p className="text-red-500 text-xs italic">{errors.name}</p>}
           </div>
@@ -203,7 +203,7 @@ export default function RegisterPage() {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow bg-white appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
             {errors.phone && <p className="text-red-500 text-xs italic">{errors.phone}</p>}
           </div>
@@ -216,7 +216,7 @@ export default function RegisterPage() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow bg-white appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
             {errors.email && <p className="text-red-500 text-xs italic">{errors.email}</p>}
           </div>
@@ -229,7 +229,7 @@ export default function RegisterPage() {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 pr-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow bg-white appearance-none border rounded w-full py-2 px-3 pr-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
             <button
               type="button"
@@ -249,7 +249,7 @@ export default function RegisterPage() {
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 pr-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow bg-white appearance-none border rounded w-full py-2 px-3 pr-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
             <button
               type="button"
@@ -269,7 +269,7 @@ export default function RegisterPage() {
               name="paymentPassword"
               value={formData.paymentPassword}
               onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 pr-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow bg-white  appearance-none border rounded w-full py-2 px-3 pr-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
             <button
               type="button"
@@ -289,7 +289,7 @@ export default function RegisterPage() {
               name="confirmPaymentPassword"
               value={formData.confirmPaymentPassword}
               onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 pr-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow bg-white  appearance-none border rounded w-full py-2 px-3 pr-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
             <button
               type="button"

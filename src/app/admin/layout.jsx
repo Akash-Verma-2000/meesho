@@ -29,9 +29,9 @@ export default function AdminLayout({ children }) {
                 </div>
 
                 {/* Content Section - occupies remaining vertical space */}
-                <section className="flex-1 p-2 md:p-5">
+                <section className="flex-1">
                     {/* Inner Content Container */}
-                    <div className="bg-white shadow rounded-lg min-h-screen p-5">
+                    <div className="bg-white shadow rounded-lg min-h-screen">
                         {children}
                     </div>
                 </section>

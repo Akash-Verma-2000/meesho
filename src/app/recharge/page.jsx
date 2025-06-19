@@ -52,7 +52,7 @@ export default function RechargePage() {
       [name]: value
     }));
     if (errors[name]) {
-        setErrors(prev => ({ ...prev, [name]: '' }));
+      setErrors(prev => ({ ...prev, [name]: '' }));
     }
   };
 
@@ -65,69 +65,69 @@ export default function RechargePage() {
   };
 
   const validateForm = () => {
-      const newErrors = {};
-      if (!rechargeData.amount) {
-          newErrors.amount = 'Amount is required.';
-      } else if (isNaN(rechargeData.amount) || parseFloat(rechargeData.amount) <= 0) {
-          newErrors.amount = 'Amount must be a positive number.';
-      }
-      if (!rechargeData.transactionId) newErrors.transactionId = 'Transaction ID is required.';
-      if (!rechargeData.paymentPassword) {
-          newErrors.paymentPassword = 'Payment password is required.';
-      } else if (rechargeData.paymentPassword.length < 8) {
-          newErrors.paymentPassword = 'Payment password must be at least 8 characters long.';
-      }
-      setErrors(newErrors);
-      return Object.keys(newErrors).length === 0;
+    const newErrors = {};
+    if (!rechargeData.amount) {
+      newErrors.amount = 'Amount is required.';
+    } else if (isNaN(rechargeData.amount) || parseFloat(rechargeData.amount) <= 0) {
+      newErrors.amount = 'Amount must be a positive number.';
+    }
+    if (!rechargeData.transactionId) newErrors.transactionId = 'Transaction ID is required.';
+    if (!rechargeData.paymentPassword) {
+      newErrors.paymentPassword = 'Payment password is required.';
+    } else if (rechargeData.paymentPassword.length < 8) {
+      newErrors.paymentPassword = 'Payment password must be at least 8 characters long.';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) {
-        return;
+      return;
     }
 
     setLoading(true);
     try {
-        const token = sessionStorage.getItem('jwtToken');
-        if (!token) {
-            toast.error('No authentication token found. Please log in.', { position: "top-right" });
-            router.push('/login');
-            return;
+      const token = sessionStorage.getItem('jwtToken');
+      if (!token) {
+        toast.error('No authentication token found. Please log in.', { position: "top-right" });
+        router.push('/login');
+        return;
+      }
+
+      const res = await fetch('/api/user/transaction', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          type: "recharge",
+          amount: parseFloat(rechargeData.amount),
+          transactionId: rechargeData.transactionId,
+          password: rechargeData.paymentPassword // API expects 'password' for paymentPassword
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.status === 'success') {
+        toast.success(data.message, { position: "top-right" });
+        setRechargeData({ amount: '', transactionId: '', paymentPassword: '' });
+        setErrors({});
+      } else {
+        toast.error(data.message || 'Failed to submit recharge request.', { position: "top-right" });
+        if (res.status === 401) {
+          sessionStorage.removeItem('jwtToken');
+          router.push('/login');
         }
-
-        const res = await fetch('/api/user/transaction', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-                type: "recharge",
-                amount: parseFloat(rechargeData.amount),
-                transactionId: rechargeData.transactionId,
-                password: rechargeData.paymentPassword // API expects 'password' for paymentPassword
-            }),
-        });
-
-        const data = await res.json();
-
-        if (data.status === 'success') {
-            toast.success(data.message, { position: "top-right" });
-            setRechargeData({ amount: '', transactionId: '', paymentPassword: '' });
-            setErrors({});
-        } else {
-            toast.error(data.message || 'Failed to submit recharge request.', { position: "top-right" });
-            if (res.status === 401) {
-                sessionStorage.removeItem('jwtToken');
-                router.push('/login');
-            }
-        }
+      }
     } catch (err) {
-        console.error('Error submitting recharge request:', err);
-        toast.error('An unexpected error occurred while submitting recharge request.', { position: "top-right" });
+      console.error('Error submitting recharge request:', err);
+      toast.error('An unexpected error occurred while submitting recharge request.', { position: "top-right" });
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -144,28 +144,53 @@ export default function RechargePage() {
           <p className="text-lg font-semibold text-gray-800 mb-4">Scan to Recharge</p>
           {
             qrCodeLoading ? (
-                <p>Loading QR Code...</p>
+              <p>Loading QR Code...</p>
             ) : qrCodeError ? (
-                <p className="text-red-600">Error loading QR Code: {qrCodeError}</p>
+              <p className="text-red-600">Error loading QR Code: {qrCodeError}</p>
             ) : qrCode ? (
-                <div className="w-full max-w-xs aspect-square bg-gray-200 flex items-center justify-center p-4 rounded-lg">
-                    <Image
-                        src={qrCode}
-                        alt="QR Code for Recharge"
-                        width={300}
-                        height={300}
-                        priority
-                        className="w-full h-full object-contain"
-                    />
-                </div>
+              <div className="w-full max-w-xs aspect-square bg-gray-200 flex items-center justify-center p-4 rounded-lg">
+                <Image
+                  src={qrCode}
+                  alt="QR Code for Recharge"
+                  width={300}
+                  height={300}
+                  priority
+                  className="w-full h-full object-contain"
+                />
+              </div>
             ) : (
-                <div className="w-full max-w-xs aspect-square bg-gray-200 flex items-center justify-center p-4 rounded-lg">
-                    <FaTimesCircle className="text-gray-400 text-6xl" />
-                    <p className="text-gray-600 text-lg font-medium">No QR code available</p>
-                </div>
+              <div className="w-full max-w-xs aspect-square bg-gray-200 flex items-center justify-center p-4 rounded-lg">
+                <FaTimesCircle className="text-gray-400 text-6xl" />
+                <p className="text-gray-600 text-lg font-medium">No QR code available</p>
+              </div>
             )
           }
           <p className="text-sm text-gray-600 mt-4 text-center">Please scan the QR code to make your payment.</p>
+
+          <div className="flex flex-col lg:flex-row w-full justify-center gap-4 mt-6">
+
+            <a
+              href="tez://upi/pay?pa=9690445806@axl&cu=INR" target="_blank"
+              className="flex-1 p-3 text-center rounded-lg font-semibold bg-green-500 hover:bg-green-600 text-white transition-colors duration-200 shadow-md"
+            >
+              Pay via Google
+            </a>
+
+            <a
+              href="paytmmp://pay?pa=9690445806@axl&cu=INR" target="_blank"
+              className="flex-1 p-3 text-center rounded-lg font-semibold bg-blue-500 hover:bg-blue-600 text-white transition-colors duration-200 shadow-md"
+            >
+              Pay via PayTM
+            </a>
+
+            <a
+              href="phonepe://upi/pay?pa=9690445806@axl&cu=INR" target="_blank"
+              className="flex-1 p-3 text-center rounded-lg font-semibold bg-purple-500 hover:bg-purple-600 text-white transition-colors duration-200 shadow-md"
+            >
+              Pay via PhonePe
+            </a>
+
+          </div>
         </div>
 
         {/* Recharge Form */}
@@ -253,9 +278,8 @@ export default function RechargePage() {
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full py-3 rounded-lg font-semibold transition-colors duration-300 ${
-                    loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'
-                }`}
+                className={`w-full py-3 rounded-lg font-semibold transition-colors duration-300 ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'
+                  }`}
               >
                 {loading ? 'Submitting...' : 'Submit Recharge Request'}
               </button>

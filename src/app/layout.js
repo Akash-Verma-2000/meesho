@@ -31,7 +31,7 @@ export default function RootLayout({ children }) {
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} >
 
-        <main className="min-h-screen bg-gray-200 pb-20">
+        <main className="min-h-screen pb-20">
           <ToastContainer position="top-right" autoClose={3000} />
           <Suspense fallback={<div>Loading...</div>}>
             {children}

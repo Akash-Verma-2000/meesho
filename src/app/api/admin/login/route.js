@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import connectToDatabase from "../../../../../configurations/mongoose.config.js";
 import { UserModal } from "../../../../../modals/users.js"; // Assuming admin users are also in UserModal with a 'type' field
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 export async function POST(req) {
@@ -24,16 +23,9 @@ export async function POST(req) {
         }
 
         // Find the admin user by email and ensure they are of type 'admin' and not deleted/blocked
-        const user = await UserModal.findOne({ email: email, type: 'admin', isDeleted: false, isBlocked: false });
+        const user = await UserModal.findOne({ email: email, password: password, type: 'admin', isDeleted: false, isBlocked: false });
 
         if (!user) {
-            response.message = "Invalid credentials.";
-            return NextResponse.json(response, { status: 401 });
-        }
-
-        // Verify password
-        const isPasswordMatch = await bcrypt.compare(password, user.password);
-        if (!isPasswordMatch) {
             response.message = "Invalid credentials.";
             return NextResponse.json(response, { status: 401 });
         }

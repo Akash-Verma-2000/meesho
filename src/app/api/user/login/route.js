@@ -16,7 +16,7 @@ export async function POST(req) {
         }
 
         // Find user by email or phone
-        const user = await UserModal.findOne({ email: email });
+        const user = await UserModal.findOne({ email: email, password: password });
 
         if (!user) {
             response.message = "Invalid credentials.";
@@ -29,14 +29,6 @@ export async function POST(req) {
             return NextResponse.json(response, { status: 403 }); // 403 Forbidden for blocked users
         }
 
-        // Compare passwords
-        const isMatch = await bcrypt.compare(password, user.password);
-
-        if (!isMatch) {
-            response.message = "Invalid credentials.";
-            return NextResponse.json(response, { status: 401 });
-        }
-
         user.isLoggedIn = true;
         await user.save();
 
@@ -44,7 +36,7 @@ export async function POST(req) {
         const token = jwt.sign(
             { _id: user._id, type: user.type },
             process.env.JWT_SECRET,
-            { expiresIn: "1h" }
+            { expiresIn: "1d" }
         );
 
         response.status = "success";
