@@ -5,15 +5,15 @@ const paymentSettingsSchema = new mongoose.Schema({
         type: String,
         default: null
     },
-    payTm: {
+    payTmLink: {
         type: String,
         default: null
     },
-    googlePay: {
+    googlePayLink: {
         type: String,
         default: null
     },
-    phonePay: {
+    phonePayLink: {
         type: String,
         default: null
     },

@@ -34,7 +34,7 @@ export async function POST(req) {
         const token = jwt.sign(
             { _id: user._id, type: user.type },
             process.env.JWT_SECRET,
-            { expiresIn: '1h' } // Token expires in 1 hour
+            { expiresIn: '1d' } // Token expires in 1 hour
         );
 
         response.status = "success";

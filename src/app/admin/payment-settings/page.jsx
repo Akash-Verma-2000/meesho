@@ -15,6 +15,9 @@ export default function AdminPaymentSettingsPage() {
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState(null);
+    const [payTmLink, setPayTmLink] = useState('');
+    const [googlePayLink, setGooglePayLink] = useState('');
+    const [phonePayLink, setPhonePayLink] = useState('');
 
     useEffect(() => {
         fetchPaymentSettings();
@@ -41,6 +44,11 @@ export default function AdminPaymentSettingsPage() {
             if (data.status === 'success') {
                 if (data.data && data.data.qrCodeBase64) {
                     setExistingQrCode(data.data.qrCodeBase64);
+                }
+                if (data.data) {
+                    setPayTmLink(data.data.payTmLink || '');
+                    setGooglePayLink(data.data.googlePayLink || '');
+                    setPhonePayLink(data.data.phonePayLink || '');
                 }
             } else {
                 setError(data.message || 'Failed to fetch existing payment settings.');
@@ -83,10 +91,6 @@ export default function AdminPaymentSettingsPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!qrCodeFile) {
-            toast.error('Please select a QR code image to upload.', { position: "top-right" });
-            return;
-        }
 
         setUploading(true);
         setError(null);
@@ -98,10 +102,51 @@ export default function AdminPaymentSettingsPage() {
                 return;
             }
 
-            const reader = new FileReader();
-            reader.readAsDataURL(qrCodeFile);
-            reader.onloadend = async () => {
-                const base64String = reader.result;
+            if (qrCodeFile) {
+
+
+                const reader = new FileReader();
+                reader.readAsDataURL(qrCodeFile);
+                reader.onloadend = async () => {
+                    const base64String = reader.result;
+
+                    const res = await fetch('/api/admin/payment-settings', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({
+                            qrCodeBase64: base64String,
+                            payTmLink,
+                            googlePayLink,
+                            phonePayLink
+                        }),
+                    });
+
+                    const data = await res.json();
+
+                    if (data.status === 'success') {
+                        toast.success(data.message, { position: "top-right" });
+                        setExistingQrCode(data.data.qrCodeBase64);
+                        setQrCodeFile(null);
+                        setQrCodePreview(null);
+                    } else {
+                        setError(data.message || 'Failed to update payment settings');
+                        toast.error(data.message || 'Failed to update payment settings', { position: "top-right" });
+                        if (res.status === 401 || res.status === 403) {
+                            sessionStorage.removeItem('jwtToken');
+                            router.push('/admin-login');
+                        }
+                    }
+                    setUploading(false);
+                };
+                reader.onerror = () => {
+                    setError('Failed to read file.');
+                    toast.error('Failed to read file.', { position: "top-right" });
+                    setUploading(false);
+                };
+            } else {
 
                 const res = await fetch('/api/admin/payment-settings', {
                     method: 'POST',
@@ -109,19 +154,20 @@ export default function AdminPaymentSettingsPage() {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`,
                     },
-                    body: JSON.stringify({ qrCodeBase64: base64String }),
+                    body: JSON.stringify({
+                        payTmLink,
+                        googlePayLink,
+                        phonePayLink
+                    }),
                 });
 
                 const data = await res.json();
 
                 if (data.status === 'success') {
                     toast.success(data.message, { position: "top-right" });
-                    setExistingQrCode(data.data.qrCodeBase64);
-                    setQrCodeFile(null);
-                    setQrCodePreview(null);
                 } else {
-                    setError(data.message || 'Failed to upload QR code.');
-                    toast.error(data.message || 'Failed to upload QR code.', { position: "top-right" });
+                    setError(data.message || 'Failed to update payment settings');
+                    toast.error(data.message || 'Failed to update payment settings', { position: "top-right" });
                     if (res.status === 401 || res.status === 403) {
                         sessionStorage.removeItem('jwtToken');
                         router.push('/admin-login');
@@ -129,16 +175,12 @@ export default function AdminPaymentSettingsPage() {
                 }
                 setUploading(false);
             };
-            reader.onerror = () => {
-                setError('Failed to read file.');
-                toast.error('Failed to read file.', { position: "top-right" });
-                setUploading(false);
-            };
 
-        } catch (err) {
-            console.error('Error uploading QR code:', err);
-            setError('An unexpected error occurred while uploading QR code.');
-            toast.error('An unexpected error occurred while uploading QR code.', { position: "top-right" });
+        }
+        catch (err) {
+            console.error('Error updating payment settings:', err);
+            setError('An unexpected error occurred while updating payment settings.');
+            toast.error('An unexpected error occurred while updating payment settings.', { position: "top-right" });
             setUploading(false);
         }
     };
@@ -187,6 +229,42 @@ export default function AdminPaymentSettingsPage() {
                         />
                     </div>
 
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label htmlFor="payTmLink" className="block text-sm font-medium text-gray-700 mb-2">PayTM Link</label>
+                            <input
+                                type="text"
+                                id="payTmLink"
+                                value={payTmLink}
+                                onChange={e => setPayTmLink(e.target.value)}
+                                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter PayTM UPI link"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="googlePayLink" className="block text-sm font-medium text-gray-700 mb-2">Google Pay Link</label>
+                            <input
+                                type="text"
+                                id="googlePayLink"
+                                value={googlePayLink}
+                                onChange={e => setGooglePayLink(e.target.value)}
+                                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter Google Pay UPI link"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="phonePayLink" className="block text-sm font-medium text-gray-700 mb-2">PhonePe Link</label>
+                            <input
+                                type="text"
+                                id="phonePayLink"
+                                value={phonePayLink}
+                                onChange={e => setPhonePayLink(e.target.value)}
+                                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter PhonePe UPI link"
+                            />
+                        </div>
+                    </div>
+
                     {(qrCodePreview || existingQrCode) && (
                         <div className="mt-4 p-4 border border-gray-200 rounded-md bg-gray-50 flex flex-col items-center">
                             <p className="text-sm font-medium text-gray-700 mb-2">Current QR Code:</p>
@@ -218,8 +296,8 @@ export default function AdminPaymentSettingsPage() {
 
                     <button
                         type="submit"
-                        disabled={uploading || !qrCodeFile}
-                        className={`w-full py-3 rounded-lg font-semibold transition-colors duration-300 ${uploading || !qrCodeFile ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'
+                        disabled={uploading}
+                        className={`w-full py-3 rounded-lg font-semibold transition-colors duration-300 ${uploading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'
                             }`}
                     >
                         {uploading ? 'Uploading...' : 'Upload QR Code'}

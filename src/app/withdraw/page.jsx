@@ -1,7 +1,7 @@
 'use client'
 import WebsiteLayout from '@/components/WebsiteLayout';
 import { useState } from 'react';
-import { FaMoneyBillWave, FaLock } from 'react-icons/fa';
+import { FaMoneyBillWave, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 
@@ -13,6 +13,7 @@ export default function WithdrawalPage() {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -126,19 +127,27 @@ export default function WithdrawalPage() {
               {/* Payment Password */}
               <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
                 <FaLock className="text-blue-500 text-xl" />
-                <div className="flex-1">
+                <div className="flex-1 relative">
                   <label htmlFor="paymentPassword" className="text-sm text-gray-600">Payment Password</label>
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     id="paymentPassword"
                     name="paymentPassword"
                     value={withdrawalData.paymentPassword}
                     onChange={handleInputChange}
                     placeholder="Enter your payment password"
                     required
-                    className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
                     disabled={loading}
                   />
+                  <button
+                    type="button"
+                    tabIndex={-1}
+                    className="absolute right-5 top-12 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
                   {errors.paymentPassword && <p className="text-red-500 text-xs italic">{errors.paymentPassword}</p>}
                 </div>
               </div>

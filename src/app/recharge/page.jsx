@@ -2,7 +2,7 @@
 import WebsiteLayout from '@/components/WebsiteLayout';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import { FaMoneyBillWave, FaBarcode, FaLock, FaTimesCircle } from 'react-icons/fa';
+import { FaMoneyBillWave, FaBarcode, FaLock, FaTimesCircle, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 
@@ -16,8 +16,10 @@ export default function RechargePage() {
   const [qrCode, setQrCode] = useState(null);
   const [qrCodeLoading, setQrCodeLoading] = useState(true);
   const [qrCodeError, setQrCodeError] = useState(null);
+  const [paymentSettings, setPaymentSettings] = useState({ payTmLink: "", googlePayLink: "", phonePayLink: "" });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     fetchQrCode();
@@ -32,6 +34,7 @@ export default function RechargePage() {
 
       if (data.status === 'success' && data.data && data.data.qrCodeBase64) {
         setQrCode(data.data.qrCodeBase64);
+        setPaymentSettings(data.data);
       } else {
         setQrCodeError(data.message || 'Failed to fetch QR code.');
         toast.error(data.message || 'Failed to fetch QR code.', { position: "top-right" });
@@ -170,21 +173,21 @@ export default function RechargePage() {
           <div className="flex flex-col lg:flex-row w-full justify-center gap-4 mt-6">
 
             <a
-              href="tez://upi/pay?pa=9690445806@axl&cu=INR" target="_blank"
+              href={paymentSettings?.googlePayLink} target="_blank"
               className="flex-1 p-3 text-center rounded-lg font-semibold bg-green-500 hover:bg-green-600 text-white transition-colors duration-200 shadow-md"
             >
               Pay via Google
             </a>
 
             <a
-              href="paytmmp://pay?pa=9690445806@axl&cu=INR" target="_blank"
+              href={paymentSettings?.googlePayLink} target="_blank"
               className="flex-1 p-3 text-center rounded-lg font-semibold bg-blue-500 hover:bg-blue-600 text-white transition-colors duration-200 shadow-md"
             >
               Pay via PayTM
             </a>
 
             <a
-              href="phonepe://upi/pay?pa=9690445806@axl&cu=INR" target="_blank"
+              href={paymentSettings?.phonePayLink} target="_blank"
               className="flex-1 p-3 text-center rounded-lg font-semibold bg-purple-500 hover:bg-purple-600 text-white transition-colors duration-200 shadow-md"
             >
               Pay via PhonePe
@@ -255,19 +258,27 @@ export default function RechargePage() {
               {/* Payment Password */}
               <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
                 <FaLock className="text-blue-500 text-xl" />
-                <div className="flex-1">
+                <div className="flex-1 relative">
                   <label htmlFor="paymentPassword" className="text-sm text-gray-600">Payment Password</label>
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     id="paymentPassword"
                     name="paymentPassword"
                     value={rechargeData.paymentPassword}
                     onChange={handleInputChange}
                     placeholder="Enter your payment password"
                     required
-                    className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
                     disabled={loading}
                   />
+                  <button
+                    type="button"
+                    tabIndex={-1}
+                    className="absolute right-5 top-12 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
                   {errors.paymentPassword && <p className="text-red-500 text-xs italic">{errors.paymentPassword}</p>}
                 </div>
               </div>

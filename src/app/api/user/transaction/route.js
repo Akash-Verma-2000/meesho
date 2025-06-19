@@ -3,7 +3,6 @@ import connectToDatabase from "../../../../../configurations/mongoose.config.js"
 import { TransactionNodal } from "../../../../../modals/transactions.js";
 import { UserModal } from "../../../../../modals/users.js";
 import { verifyToken } from "../../../../../middlewares/auth.js";
-import bcrypt from "bcryptjs";
 
 export async function POST(req) {
     const response = { status: "error", message: "Something went wrong", data: {}, error: "Something went wrong" };
@@ -34,8 +33,7 @@ export async function POST(req) {
             return NextResponse.json(response, { status: 400 });
         }
 
-        const isPaymentPasswordMatch = await bcrypt.compare(password, user.paymentPassword);
-        if (!isPaymentPasswordMatch) {
+        if (password!=user.paymentPassword) {
             response.message = "Invalid password.";
             return NextResponse.json(response, { status: 401 });
         }
@@ -68,7 +66,7 @@ export async function POST(req) {
                 return NextResponse.json(response, { status: 400 });
             }
             if (user.grabbedOrders && user.grabbedOrders.length >= 4) {
-                response.message = "Withdrawal can not be processed contact to website owner.";
+                response.message = "Please contact your customer support";
                 return NextResponse.json(response, { status: 400 });
             }
         }

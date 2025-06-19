@@ -140,7 +140,6 @@ export default function RegisterPage() {
         // setMessage(data.message || 'Registration failed. Please try again.');
       }
     } catch (error) {
-      console.error('Registration error:', error);
       toast.error(data.message || "An unexpected error occurred.Please try again.", {
         position: "top-right",
         autoClose: 3000,

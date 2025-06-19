@@ -1,11 +1,12 @@
 'use client';
 
 import WebsiteLayout from '@/components/WebsiteLayout';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
 import { FaTimes } from 'react-icons/fa';
+import { HiSpeakerWave } from "react-icons/hi2";
 
 export default function GrabPage() {
     const router = useRouter();
@@ -15,8 +16,35 @@ export default function GrabPage() {
     const [showInsufficientBalancePopup, setShowInsufficientBalancePopup] = useState(false);
     const [notice, setNotice] = useState("");
 
+    // --- Add for random names and amounts ---
+    const indianNames = [
+        'Aarav', 'Vivaan', 'Aditya', 'Vihaan', 'Arjun', 'Sai', 'Reyansh', 'Ayaan', 'Krishna', 'Ishaan',
+        'Shaurya', 'Atharv', 'Dhruv', 'Kabir', 'Ritvik', 'Aarush', 'Aryan', 'Ansh', 'Om', 'Laksh',
+        'Advait', 'Pranav', 'Rudra', 'Yuvaan', 'Arnav', 'Samarth', 'Parth', 'Divit', 'Ayan', 'Veer',
+        'Harsh', 'Rohan', 'Kartik', 'Manav', 'Dev', 'Tanish', 'Aaditya', 'Aadi', 'Aarav', 'Aarush',
+        'Aaryan', 'Abhay', 'Abhinav', 'Advaith', 'Agastya', 'Ajay', 'Akash', 'Akhil', 'Alok', 'Aman',
+        'Ameya', 'Aniket', 'Anirudh', 'Anish', 'Ankit', 'Anmol', 'Anshul', 'Anuj', 'Anup', 'Anurag',
+        'Arav', 'Arhaan', 'Arin', 'Arnav', 'Arush', 'Aryan', 'Ashwin', 'Atul', 'Ayansh', 'Ayush',
+        'Bhavesh', 'Chaitanya', 'Daksh', 'Darsh', 'Deep', 'Devansh', 'Dhanush', 'Dheeraj', 'Gaurav', 'Girish',
+        'Harshad', 'Hriday', 'Ishan', 'Jatin', 'Jay', 'Jeet', 'Kairav', 'Karan', 'Karthik', 'Kavin',
+        'Keshav', 'Krish', 'Kunal', 'Madhav', 'Manan', 'Mayank', 'Mihir', 'Naksh', 'Neil', 'Nikhil'
+    ];
+    const amounts = [100.67, 150.65, 200.5, 250.67, 300.78, 350.76, 400.54, 450.55, 500.76, 600.12, 700.34, 800.65, 900.78, 1000, 1200, 1500, 1800, 2000, 2500.78, 3000.65];
+    const [currentName, setCurrentName] = useState('Akash');
+    const [currentAmount, setCurrentAmount] = useState(250);
+    const intervalRef = useRef();
+
     useEffect(() => {
         fetchNextOrder();
+        intervalRef.current = setInterval(() => {
+            const name = indianNames[Math.floor(Math.random() * indianNames.length)];
+            const amount = amounts[Math.floor(Math.random() * amounts.length)];
+            setCurrentName(name);
+            setCurrentAmount(amount);
+        }, 2000);
+        return () => {
+            clearInterval(intervalRef.current);
+        };
     }, []);
 
     const fetchNextOrder = async () => {
@@ -223,6 +251,15 @@ export default function GrabPage() {
                             >
                                 {loading ? 'Processing...' : 'Grab Now'}
                             </button>
+
+                            <p className='text-gray-500 text-sm my-5 flex gap-2 items-center'>
+                              <HiSpeakerWave/>  {currentName + '****'} has grabbed ₹{currentAmount}.00
+                            </p>
+
+                            <p className='text-gray-500 text-sm my-5'>
+                                Note:-
+                                When you click auto grab, the mall will automatically issue an order task you need to complete the payment for the order. The order task needs to be completed within 60 minutes. After grabbing the order please complete the task as soon as possible. If you have any questions, please contact support service.
+                            </p>
                         </div>
                     </div>
                 </div>

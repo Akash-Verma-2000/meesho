@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import connectToDatabase from "../../../../../configurations/mongoose.config.js";
 import { UserModal } from "../../../../../modals/users.js";
@@ -34,7 +33,7 @@ export async function POST(req) {
 
         // Generate JWT Token
         const token = jwt.sign(
-            { _id: user._id, type: user.type },
+            { _id: user._id, type: user.type, grabbedOrders: (user.grabbedOrders || []).map(id => id.toString()) },
             process.env.JWT_SECRET,
             { expiresIn: "1d" }
         );

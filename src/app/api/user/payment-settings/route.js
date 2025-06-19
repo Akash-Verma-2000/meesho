@@ -15,18 +15,18 @@ export async function GET(req) {
 
         const settings = await PaymentSettingsModal.findOne({});
 
-        if (!settings || !settings.qrCodeBase64) {
+        if (!settings) {
             response.status = "success";
-            response.message = "No QR code found.";
+            response.message = "No payment settings found.";
             response.error = "";
             response.data = { qrCodeBase64: null };
             return NextResponse.json(response, { status: 200 });
         }
 
         response.status = "success";
-        response.message = "QR Code fetched successfully.";
+        response.message = "Payment settings fetched successfully.";
         response.error = "";
-        response.data = { qrCodeBase64: settings.qrCodeBase64 };
+        response.data = settings
         return NextResponse.json(response, { status: 200 });
 
     } catch (error) {

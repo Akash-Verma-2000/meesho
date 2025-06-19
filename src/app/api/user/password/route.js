@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import connectToDatabase from "../../../../../configurations/mongoose.config.js";
 import { UserModal } from "../../../../../modals/users.js";
 import { verifyToken } from "../../../../../middlewares/auth.js";
-import bcrypt from "bcryptjs";
 
 export async function PUT(req) {
     const response = {
@@ -51,8 +50,7 @@ export async function PUT(req) {
         }
 
         // Verify old password
-        const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
-        if (!isPasswordMatch) {
+        if (oldPassword != user.password) {
             response.message = "Incorrect old password.";
             return NextResponse.json(response, { status: 401 });
         }
