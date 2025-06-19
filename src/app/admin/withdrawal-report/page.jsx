@@ -186,24 +186,24 @@ export default function WithdrawalReportPage() {
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                                {withdrawals.map((withdrawal, index) => (
+                                {withdrawals?.map((withdrawal, index) => (
                                     <tr key={withdrawal._id}>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{startWithdrawal + index}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{withdrawal.userId.userId}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">₹{withdrawal.amount.toFixed(2)}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">₹{Number((Number(withdrawal.amount)) - (Number(withdrawal.amount) * 5 / 100)).toFixed(2)}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{new Date(withdrawal.createdAt).toLocaleDateString()}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{new Date(withdrawal.createdAt).toLocaleTimeString()}</td>
-                                        <td className={`px-6 py-4 whitespace-nowrap text-sm font-semibold ${withdrawal.status === 'approved' ? 'text-green-600' :
-                                            withdrawal.status === 'pending' ? 'text-yellow-600' :
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{withdrawal?.userId?.userId}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">₹{withdrawal?.amount?.toFixed(2)}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">₹{Number((Number(withdrawal?.amount)) - (Number(withdrawal?.amount) * 5 / 100))?.toFixed(2)}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{new Date(withdrawal?.createdAt)?.toLocaleDateString()}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{new Date(withdrawal?.createdAt)?.toLocaleTimeString()}</td>
+                                        <td className={`px-6 py-4 whitespace-nowrap text-sm font-semibold ${withdrawal?.status === 'approved' ? 'text-green-600' :
+                                            withdrawal?.status === 'pending' ? 'text-yellow-600' :
                                                 'text-red-600'
                                             }`}>
-                                            {withdrawal.status.charAt(0).toUpperCase() + withdrawal.status.slice(1)}
+                                            {withdrawal?.status?.charAt(0)?.toUpperCase() + withdrawal?.status?.slice(1)}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                             <select
-                                                value={withdrawal.status}
-                                                onChange={(e) => handleStatusChange(withdrawal._id, e.target.value)}
+                                                value={withdrawal?.status}
+                                                onChange={(e) => handleStatusChange(withdrawal?._id, e?.target?.value)}
                                                 className="border border-gray-300 rounded-md p-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 disabled={loading}
                                             >
@@ -219,42 +219,42 @@ export default function WithdrawalReportPage() {
 
                         {/* Responsive cards for small screens */}
                         <div className="sm:hidden">
-                            {withdrawals.map((withdrawal, index) => (
-                                <div key={withdrawal._id} className="bg-white p-4 mb-4 rounded-lg shadow-md">
+                            {withdrawals?.map((withdrawal, index) => (
+                                <div key={withdrawal?._id} className="bg-white p-4 mb-4 rounded-lg shadow-md">
                                     <div className="flex justify-between items-center mb-2">
                                         <span className="text-sm font-medium text-gray-500">S No:</span>
                                         <span className="text-sm font-medium text-gray-900">{startWithdrawal + index}</span>
                                     </div>
                                     <div className="flex justify-between items-center mb-2">
                                         <span className="text-sm font-medium text-gray-500">User ID:</span>
-                                        <span className="text-sm text-gray-700">{withdrawal.userId.userId}</span>
+                                        <span className="text-sm text-gray-700">{withdrawal?.userId?.userId}</span>
                                     </div>
                                     <div className="flex justify-between items-center mb-2">
                                         <span className="text-sm font-medium text-gray-500">Amount:</span>
-                                        <span className="text-sm text-gray-700">₹{withdrawal.amount.toFixed(2)}</span>
+                                        <span className="text-sm text-gray-700">₹{withdrawal?.amount?.toFixed(2)}</span>
                                     </div>
                                     <div className="flex justify-between items-center mb-2">
                                         <span className="text-sm font-medium text-gray-500">Date:</span>
-                                        <span className="text-sm text-gray-700">{new Date(withdrawal.createdAt).toLocaleDateString()}</span>
+                                        <span className="text-sm text-gray-700">{new Date(withdrawal?.createdAt)?.toLocaleDateString()}</span>
                                     </div>
                                     <div className="flex justify-between items-center mb-2">
                                         <span className="text-sm font-medium text-gray-500">Time:</span>
-                                        <span className="text-sm text-gray-700">{new Date(withdrawal.createdAt).toLocaleTimeString()}</span>
+                                        <span className="text-sm text-gray-700">{new Date(withdrawal?.createdAt)?.toLocaleTimeString()}</span>
                                     </div>
                                     <div className="flex justify-between items-center mb-2">
                                         <span className="text-sm font-medium text-gray-500">Status:</span>
-                                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${withdrawal.status === 'approved' ? 'bg-green-100 text-green-800' :
-                                            withdrawal.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${withdrawal?.status === 'approved' ? 'bg-green-100 text-green-800' :
+                                            withdrawal?.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                                                 'bg-red-100 text-red-800'
                                             }`}>
-                                            {withdrawal.status.charAt(0).toUpperCase() + withdrawal.status.slice(1)}
+                                            {withdrawal?.status?.charAt(0)?.toUpperCase() + withdrawal?.status?.slice(1)}
                                         </span>
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <span className="text-sm font-medium text-gray-500">Actions:</span>
                                         <select
-                                            value={withdrawal.status}
-                                            onChange={(e) => handleStatusChange(withdrawal._id, e.target.value)}
+                                            value={withdrawal?.status}
+                                            onChange={(e) => handleStatusChange(withdrawal?._id, e?.target?.value)}
                                             className="border border-gray-300 rounded-md p-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             disabled={loading}
                                         >
