@@ -182,7 +182,7 @@ export default function OrdersPage() {
                                             <span className="text-sm font-medium text-gray-900">{startOrder + index}</span>
                                         </div>
 
-                                        <div className="flex justify-between items-center mb-2">
+                                        <div className="flex gap-2 justify-between mb-2">
                                             <span className="text-sm font-medium text-gray-500">Title:</span>
                                             <span className="text-sm text-gray-700">{order.title}</span>
                                         </div>
