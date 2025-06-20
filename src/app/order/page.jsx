@@ -102,10 +102,10 @@ export default function OrdersPage() {
         );
     }
 
-  return (
-    <WebsiteLayout>
-      <div className="min-h-screen bg-gray-100 pb-20">
-        {/* Header */}
+    return (
+        <WebsiteLayout>
+            <div className="min-h-screen bg-gray-100 pb-20">
+                {/* Header */}
                 <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-5 mb-5 text-center text-xl font-bold shadow-lg">
                     My Grabbed Orders
                 </div>
@@ -164,31 +164,34 @@ export default function OrdersPage() {
                             <div className="sm:hidden">
                                 {orders.map((order, index) => (
                                     <div key={order._id} className="bg-white p-4 mb-4 rounded-lg shadow-md">
+
                                         <div className="flex justify-between items-center mb-2">
-                                            <span className="text-sm font-medium text-gray-500">S No:</span>
-                                            <span className="text-sm font-medium text-gray-900">{startOrder + index}</span>
-                                        </div>
-                                        <div className="flex justify-between items-center mb-2">
-                                            <span className="text-sm font-medium text-gray-500">Image:</span>
                                             {order.img && (
                                                 <Image
                                                     src={order.img}
                                                     alt={order.title}
-                                                    width={50}
-                                                    height={50}
+                                                    width={1920}
+                                                    height={1920}
                                                     objectFit="cover"
                                                     className="rounded-md"
                                                 />
                                             )}
                                         </div>
                                         <div className="flex justify-between items-center mb-2">
+                                            <span className="text-sm font-medium text-gray-500">S No:</span>
+                                            <span className="text-sm font-medium text-gray-900">{startOrder + index}</span>
+                                        </div>
+
+                                        <div className="flex justify-between items-center mb-2">
                                             <span className="text-sm font-medium text-gray-500">Title:</span>
                                             <span className="text-sm text-gray-700">{order.title}</span>
                                         </div>
-                                        <div className="flex justify-between items-center mb-2">
+                                        { /*
+                                          <div className="flex justify-between items-center mb-2">
                                             <span className="text-sm font-medium text-gray-500">Description:</span>
                                             <span className="text-sm text-gray-700 break-words max-w-[calc(100%-100px)] text-right">{order.description}</span>
-                                        </div>
+                                        </div>*/ }
+
                                         <div className="flex justify-between items-center mb-2">
                                             <span className="text-sm font-medium text-gray-500">Price:</span>
                                             <span className="text-sm text-gray-700">₹{order.price.toFixed(2)}</span>
@@ -205,7 +208,7 @@ export default function OrdersPage() {
                                         </div>
                                     </div>
                                 ))}
-        </div>
+                            </div>
 
                             {/* Pagination Controls */}
                             <div className="px-4 py-4 flex flex-col sm:flex-row items-center justify-between border-t border-gray-200 bg-gray-200 gap-y-4">
@@ -247,8 +250,8 @@ export default function OrdersPage() {
                             </div>
                         </div>
                     )}
-        </div>
-      </div>
-    </WebsiteLayout>
-  );
+                </div>
+            </div>
+        </WebsiteLayout>
+    );
 } 
