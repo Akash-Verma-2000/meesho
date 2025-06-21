@@ -47,7 +47,7 @@ export default function BankDetailsPage() {
                     setIsEditing(false); // If data exists, start in view mode
                 } else if (res.status === 404) {
                     // No bank details found, user can add new ones
-                    toast.info('No bank details found. Please add your bank details.', { position: "top-right" });
+                    // toast.info('No bank details found. Please add your bank details.', { position: "top-right" });
                     setIsEditing(true); // Allow user to add new details
                 } else {
                     setApiError(data.message || 'Failed to fetch bank details.');

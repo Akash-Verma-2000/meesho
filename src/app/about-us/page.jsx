@@ -51,10 +51,9 @@ export default function AboutUsPage() {
 
         {/* Place the image here */}
         <div className='p-5'>
-
-        <Image src="/images/Certificate.jpg" alt="Certificate" width={1920} height={1920} />
-        <Image src="/images/iso1.png" alt="ISO Certificate 1" width={1920} height={1920} className='my-5'/>
-        <Image src="/images/iso2.png" alt="ISO Certificate 2" width={1920} height={1920} />
+          <Image src="/images/Certificate.jpg" alt="Certificate" width={1920} height={1920} />
+          <Image src="/images/iso1.png" alt="ISO Certificate 1" width={1920} height={1920} className='my-5' />
+          <Image src="/images/iso2.png" alt="ISO Certificate 2" width={1920} height={1920} />
         </div>
 
       </div>

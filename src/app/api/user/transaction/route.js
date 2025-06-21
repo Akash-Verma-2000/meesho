@@ -3,6 +3,7 @@ import connectToDatabase from "../../../../../configurations/mongoose.config.js"
 import { TransactionNodal } from "../../../../../modals/transactions.js";
 import { UserModal } from "../../../../../modals/users.js";
 import { verifyToken } from "../../../../../middlewares/auth.js";
+import { BankModal } from "../../../../../modals/bank.js";
 
 export async function POST(req) {
     const response = { status: "error", message: "Something went wrong", data: {}, error: "Something went wrong" };
@@ -61,6 +62,13 @@ export async function POST(req) {
 
         // Handle withdrawal specific logic
         if (type === 'withdraw') {
+            // Check if user has filled bank details
+            const bankDetails = await BankModal.findOne({ userId: user._id });
+            if (!bankDetails) {
+                response.message = "Please fill the bank details first";
+                response.redirectTo = "/bank-details";
+                return NextResponse.json(response, { status: 400 });
+            }
             if (user.balance < amount) {
                 response.message = "Insufficient balance.";
                 return NextResponse.json(response, { status: 400 });

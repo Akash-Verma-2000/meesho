@@ -55,7 +55,7 @@ export async function POST(req) {
 
         // Check if user has sufficient balance
         if (user.balance < order.price) {
-            response.message = "Insufficient balance";
+            response.message = `Insufficient balance please add ₹${order.price - user.balance} in your balace.`;
             return NextResponse.json(response, { status: 400 });
         }
 

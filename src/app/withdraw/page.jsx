@@ -77,6 +77,12 @@ export default function WithdrawalPage() {
             setWithdrawalData({ amount: '', paymentPassword: '' });
             setErrors({});
         } else {
+            // Handle bank details not filled
+            if (res.status === 400 && data.redirectTo === '/bank-details') {
+                toast.error('Please fill the bank details first', { position: "top-right" });
+                router.push('/bank-details');
+                return;
+            }
             toast.error(data.message || 'Failed to submit withdrawal request.', { position: "top-right" });
             if (res.status === 401) {
                 sessionStorage.removeItem('jwtToken');
