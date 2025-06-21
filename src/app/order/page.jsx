@@ -2,12 +2,13 @@
 import WebsiteLayout from '@/components/WebsiteLayout';
 import { useState, useEffect } from 'react';
 import { FaFileAlt, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
 
 export default function OrdersPage() {
     const router = useRouter();
+    const pathname = usePathname();
     const [orders, setOrders] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [ordersPerPage, setOrdersPerPage] = useState(10);
@@ -108,6 +109,30 @@ export default function OrdersPage() {
                 {/* Header */}
                 <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-5 mb-5 text-center text-xl font-bold shadow-lg">
                     My Grabbed Orders
+                </div>
+
+                <div>
+                    {/* Tabs */}
+                    <div className="flex gap-2 justify-center mb-6">
+                        <button
+                            className={`cursor-pointer px-4 py-2 rounded-t-lg font-semibold focus:outline-none transition-colors duration-200 ${pathname === '/pending-orders' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-blue-100'}`}
+                            onClick={() => router.push('/pending-orders')}
+                        >
+                            Pending
+                        </button>
+                        <button
+                            className={`cursor-pointer px-4 py-2 rounded-t-lg font-semibold focus:outline-none transition-colors duration-200 ${pathname === '/order' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-blue-100'}`}
+                            onClick={() => router.push('/order')}
+                        >
+                            Completed
+                        </button>
+                        <button
+                            className={`cursor-pointer px-4 py-2 rounded-t-lg font-semibold focus:outline-none transition-colors duration-200 ${pathname === '/frozen-orders' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-blue-100'}`}
+                            onClick={() => router.push('/frozen-orders')}
+                        >
+                            Frozen
+                        </button>
+                    </div>
                 </div>
 
                 {/* Orders Table */}
