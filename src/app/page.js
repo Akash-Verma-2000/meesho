@@ -137,10 +137,26 @@ export default function Home() {
   return (
     <WebsiteLayout>
       <HeroSection />
-      <section className="my-8 md:my-12 lg:my-16 px-4 sm:px-6 md:px-8 lg:px-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
+      <section className="my-8 md:my-12 px-4 sm:px-6 md:px-8 lg:px-20">
+        <div className="grid grid-cols-2 gap-4 sm:gap-6 md:gap-8">
+
           {/* Recharge Section */}
-          <div className="bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <Link href="/recharge" className="flex items-center justify-center gap-1 py-3 md:py-5 bg-blue-600 cursor-pointer text-white px-4 rounded-lg hover:bg-blue-700 text-center">
+            <FaMoneyBillWave className="text-white text-xl sm:text-2xl" />
+            <span>
+              Recharge
+            </span>
+          </Link>
+
+          {/* Withdrawal Section */}
+          <Link href="/withdraw" className="flex items-center justify-center gap-1 py-3 md:py-5 bg-green-600 cursor-pointer text-white px-4 rounded-lg hover:bg-green-700 text-center">
+            <FaMoneyBillWave className="text-white text-xl sm:text-2xl" />
+            <span>
+              Withdraw
+            </span>
+          </Link>
+
+          {/* <div className="bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
             <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
               <div className="bg-blue-100 p-2 sm:p-3 rounded-full">
                 <FaMoneyBillWave className="text-blue-600 text-xl sm:text-2xl" />
@@ -153,10 +169,10 @@ export default function Home() {
             <Link href="/recharge" className="bg-blue-600 cursor-pointer text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300 w-full text-sm sm:text-base text-center">
               Recharge Now
             </Link>
-          </div>
+          </div> */}
 
-          {/* Withdrawal Section */}
-          <div className="bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+
+          {/* <div className="bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
             <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
               <div className="bg-green-100 p-2 sm:p-3 rounded-full">
                 <FaWallet className="text-green-600 text-xl sm:text-2xl" />
@@ -169,7 +185,8 @@ export default function Home() {
             <Link href="/withdraw" className="bg-green-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-300 w-full text-sm sm:text-base text-center">
               Withdraw Now
             </Link>
-          </div>
+          </div> */}
+
         </div>
       </section>
 
@@ -208,19 +225,41 @@ export default function Home() {
         </div>
       </section>
 
+
+      <section className="my-8 md:my-12 px-4 sm:px-6 md:px-8 lg:px-20">
+        <div className="grid grid-cols-2 gap-4 sm:gap-6 md:gap-8">
+
+          <Link href="/notice" className="flex items-center justify-center gap-1 py-3 md:py-5  bg-white cursor-pointer text-black px-4 rounded-lg  text-center">
+            <FaMoneyBillWave className="text-primary text-xl sm:text-2xl" />
+            <span>
+              Notice
+            </span>
+          </Link>
+
+          <Link href="/welcome" className="flex items-center justify-center gap-1 py-3 md:py-5 bg-white  cursor-pointer text-black px-4 rounded-lg  text-center">
+            <FaMoneyBillWave className="text-primary text-xl sm:text-2xl" />
+            <span>
+              Welcome
+            </span>
+          </Link>
+
+        </div>
+      </section>
+
+
       <section className="my-8 md:my-12 lg:my-16 px-4 sm:px-6 md:px-8 lg:px-20">
         <h2 className="text-center text-3xl sm:text-4xl font-extrabold text-gray-900 mb-10">Our Valued Partners</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 sm:gap-8">
+        <div className="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 lg:gap-5">
           {partnerLogos.map((src, index) => (
             <div
               key={index}
-              className="bg-white p-2 sm:p-2 rounded-3xl shadow-md hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center h-32 sm:h-40 border border-gray-200"
+              className="bg-white p-2 rounded-3xl shadow-md hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center border border-gray-200"
             >
               <Image
                 src={src}
                 alt={`Partner Logo ${index + 1}`}
-                width={200}
-                height={100}
+                width={1920}
+                height={1920}
               // objectFit="contain"
               />
             </div>

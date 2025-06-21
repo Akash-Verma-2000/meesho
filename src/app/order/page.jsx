@@ -130,6 +130,7 @@ export default function OrdersPage() {
                                         <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Price</th>
                                         <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Commission</th>
                                         <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Commission Amount</th>
+                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Grabbed At</th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
@@ -154,6 +155,9 @@ export default function OrdersPage() {
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{order.comission.toFixed(2)}%</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-medium">
                                                 ₹{((order.price * order.comission) / 100).toFixed(2)}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                                {order.grabbedAt ? new Date(order.grabbedAt).toLocaleString() : '-'}
                                             </td>
                                         </tr>
                                     ))}
@@ -204,6 +208,12 @@ export default function OrdersPage() {
                                             <span className="text-sm font-medium text-gray-500">Commission Amount:</span>
                                             <span className="text-sm text-green-600 font-medium">
                                                 ₹{((order.price * order.comission) / 100).toFixed(2)}
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="text-sm font-medium text-gray-500">Grabbed At:</span>
+                                            <span className="text-sm text-gray-700">
+                                                {order.grabbedAt ? new Date(order.grabbedAt).toLocaleString() : '-'}
                                             </span>
                                         </div>
                                     </div>

@@ -216,7 +216,7 @@ export default function GrabPage() {
                 <div className="max-w-2xl mx-auto px-4">
                     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
                         {/* Order Image */}
-                        <div className="relative h-64 w-full">
+                        <div className="relative h-64 w-full mt-5">
                             <Image
                                 src={order.img}
                                 alt={order.title}

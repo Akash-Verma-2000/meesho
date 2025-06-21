@@ -3,6 +3,7 @@ import connectToDatabase from "../../../../../configurations/mongoose.config.js"
 import { OrderModal } from "../../../../../modals/orders.js";
 import { UserModal } from "../../../../../modals/users.js";
 import { verifyToken } from "../../../../../middlewares/auth.js";
+import { CommissionModal } from "../../../../../modals/commissions.js";
 
 export async function GET(req) {
     const response = {
@@ -51,15 +52,22 @@ export async function GET(req) {
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit);
-
         
+        // For each order, fetch the commission record to get the grab time
+        const ordersWithGrabbedAt = await Promise.all(orders.map(async (order) => {
+            const commission = await CommissionModal.findOne({ userId: user._id, orderId: order._id });
+            return {
+                ...order.toObject(),
+                grabbedAt: commission ? commission.createdAt : null
+            };
+        }));
 
-        console.log("Found Orders:", orders);
+        console.log("Found Orders:", ordersWithGrabbedAt);
 
         response.status = "success";
         response.message = "Orders fetched successfully";
         response.data = {
-            orders,
+            orders: ordersWithGrabbedAt,
             currentPage: page,
             totalPages: Math.ceil(totalOrders / limit),
             totalOrders,
