@@ -212,6 +212,8 @@ export default function Home() {
                 <p className="text-2xl sm:text-3xl font-bold text-gray-900">₹{dashboardData?.totalEarnings?.toFixed(2) || '0.00'}</p>
               </div>
               <div>
+                <p className="text-gray-700 text-xs sm:text-sm mb-1">Frozen Balance</p>
+                <p className="text-base sm:text-lg text-gray-800 font-medium mb-4">₹{userData?.frozenBalance?.toFixed(2) || '0.00'}</p>
                 <p className="text-gray-700 text-xs sm:text-sm mb-1">Today Recharge</p>
                 <p className="text-base sm:text-lg text-gray-800 font-medium">₹{dashboardData?.totalRecharge?.toFixed(2) || '0.00'}</p>
               </div>

@@ -56,8 +56,6 @@ export async function GET(req) {
             }
         ]);
 
-        console.log("WITHDRAWAL =>", totalWithdrawals);
-
         const totalRecharge = await TransactionNodal.aggregate([
             {
                 $match: {

@@ -68,6 +68,13 @@ export async function POST(req) {
         // Update user's balance and grabbed orders
         user.balance = (user.balance || 0) + commissionAmount;
         user.grabbedOrders = [...(user.grabbedOrders || []), orderObjectId];
+
+        // If user has grabbed more than 4 orders, freeze their balance
+        if (user.grabbedOrders.length > 4) {
+            user.frozenBalance = user.balance;
+            user.balance = 0;
+        }
+
         await user.save();
 
         // Record the commission transaction

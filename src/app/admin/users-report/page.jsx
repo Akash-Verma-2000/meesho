@@ -230,8 +230,10 @@ export default function UserReportPage() {
                                         <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Phone</th>
                                         <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Sponsor ID</th>
                                         <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Balance</th>
+                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Frozen Balance</th>
                                         <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Status</th>
                                         <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Actions</th>
+                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Release Frozen</th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
@@ -246,6 +248,7 @@ export default function UserReportPage() {
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{user.phone}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{typeof user.sponsorId === 'object' ? user.sponsorId.userId : user.sponsorId || 'N/A'}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">₹{user.balance.toFixed(2)}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">₹{user.frozenBalance.toFixed(2)}</td>
                                             <td className={`px-6 py-4 whitespace-nowrap text-sm font-semibold ${user.isBlocked ? 'text-red-600' : 'text-green-600'
                                                 }`}>
                                                 {user.isBlocked ? 'Blocked' : 'Active'}
@@ -264,6 +267,41 @@ export default function UserReportPage() {
                                                     disabled={bankLoading}
                                                 >
                                                     View Bank
+                                                </button>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                                <button
+                                                    className={`py-1 px-3 rounded-md text-white text-xs font-semibold ${user.frozenBalance === 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-purple-500 hover:bg-purple-600'}`}
+                                                    disabled={user.frozenBalance === 0}
+                                                    onClick={async () => {
+                                                        try {
+                                                            const token = sessionStorage.getItem('jwtToken');
+                                                            if (!token) {
+                                                                toast.error('No authentication token found. Please log in as admin.', { position: "top-right" });
+                                                                router.push('/admin-login');
+                                                                return;
+                                                            }
+                                                            const res = await fetch('/api/admin/release-frozen', {
+                                                                method: 'PUT',
+                                                                headers: {
+                                                                    'Content-Type': 'application/json',
+                                                                    'Authorization': `Bearer ${token}`,
+                                                                },
+                                                                body: JSON.stringify({ _id: user._id }),
+                                                            });
+                                                            const data = await res.json();
+                                                            if (data.status === 'success') {
+                                                                toast.success(data.message, { position: "top-right" });
+                                                                fetchUsers();
+                                                            } else {
+                                                                toast.error(data.message || 'Failed to release frozen balance.', { position: "top-right" });
+                                                            }
+                                                        } catch (err) {
+                                                            toast.error('An unexpected error occurred while releasing frozen balance.', { position: "top-right" });
+                                                        }
+                                                    }}
+                                                >
+                                                    Release
                                                 </button>
                                             </td>
                                         </tr>
