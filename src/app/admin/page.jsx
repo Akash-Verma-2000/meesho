@@ -66,7 +66,7 @@ export default function AdminDashboard() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+            <div className="min-h-screen bg-white flex items-center justify-center">
                 <p>Loading dashboard...</p>
             </div>
         );
@@ -74,7 +74,7 @@ export default function AdminDashboard() {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+            <div className="min-h-screen bg-white flex items-center justify-center">
                 <p className="text-red-600">Error: {error}</p>
             </div>
         );
@@ -82,7 +82,7 @@ export default function AdminDashboard() {
 
     return (
         <>
-            <div className="min-h-screen bg-gray-100 pb-20">
+            <div className="min-h-screen bg-white pb-20">
                 {/* Header */}
                 <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-5 mb-5 text-center text-xl font-bold shadow-lg">
                     Admin Dashboard

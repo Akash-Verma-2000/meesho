@@ -187,7 +187,7 @@ export default function AdminPaymentSettingsPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+            <div className="min-h-screen bg-white flex items-center justify-center">
                 <p>Loading payment settings...</p>
             </div>
         );
@@ -195,21 +195,21 @@ export default function AdminPaymentSettingsPage() {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+            <div className="min-h-screen bg-white flex items-center justify-center">
                 <p className="text-red-600">Error: {error}</p>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gray-100 pb-20">
+        <div className="min-h-screen bg-white pb-20">
             {/* Header */}
             <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-5 mb-5 text-center text-xl font-bold shadow-lg">
                 Admin Payment Settings
             </div>
 
             {/* Upload QR Code Section */}
-            <div className="bg-white mx-5 rounded-xl shadow-lg overflow-hidden p-6">
+            <div className="bg-gray-100 mx-5 rounded-xl shadow-lg overflow-hidden p-6">
                 <h2 className="text-xl font-semibold text-gray-800 mb-4">Upload QR Code for Recharge</h2>
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>

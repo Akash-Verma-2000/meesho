@@ -135,7 +135,7 @@ export default function AdminOrdersPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+            <div className="min-h-screen bg-white flex items-center justify-center">
                 <p>Loading orders...</p>
             </div>
         );
@@ -143,7 +143,7 @@ export default function AdminOrdersPage() {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+            <div className="min-h-screen bg-white flex items-center justify-center">
                 <p className="text-red-600">Error: {error}</p>
             </div>
         );
@@ -151,7 +151,7 @@ export default function AdminOrdersPage() {
 
     return (
         <>
-            <div className="min-h-screen bg-gray-100 pb-20">
+            <div className="min-h-screen bg-white pb-20">
                 {/* Header */}
                 <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-5 mb-5 text-center text-xl font-bold shadow-lg">
                     Admin Order Management

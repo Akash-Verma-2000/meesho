@@ -122,7 +122,7 @@ export default function WithdrawalReportPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+            <div className="min-h-screen bg-white flex items-center justify-center">
                 <p>Loading withdrawal reports...</p>
             </div>
         );
@@ -130,21 +130,21 @@ export default function WithdrawalReportPage() {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+            <div className="min-h-screen bg-white flex items-center justify-center">
                 <p className="text-red-600">Error: {error}</p>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen">
             {/* Header */}
             <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-4 text-center text-xl font-bold shadow-lg">
                 Withdrawal Reports
             </div>
 
             {/* Filters */}
-            <div className="bg-white m-5 rounded-xl shadow-lg p-5 my-5">
+            <div className="m-5 rounded-xl shadow-lg p-5 my-5">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="w-full sm:w-auto">
                         <label htmlFor="statusFilter" className="text-sm text-gray-700 block mb-1">Filter by Status:</label>

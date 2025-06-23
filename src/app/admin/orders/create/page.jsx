@@ -192,21 +192,21 @@ const CreateOrderPage = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+            <div className="min-h-screen bg-white flex items-center justify-center">
                 <p>Loading...</p>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gray-100 pb-20">
+        <div className="min-h-screen bg-white pb-20">
             {/* Header */}
             <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-5 mb-5 text-center text-xl font-bold shadow-lg">
                 {orderId ? 'Edit Order' : 'Create New Order'}
             </div>
 
             {/* Order Form */}
-            <div className="bg-white mx-5 rounded-xl shadow-lg overflow-hidden p-5">
+            <div className="bg-gray-100 mx-5 rounded-xl shadow-lg overflow-hidden p-5">
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                         <label htmlFor="imageInput" className="block text-sm font-medium text-gray-700 mb-1">Order Image (Max 2MB):</label>
