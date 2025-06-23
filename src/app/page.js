@@ -1,7 +1,7 @@
 'use client'
 import HeroSection from "@/components/HeroSection";
 import WebsiteLayout from "@/components/WebsiteLayout";
-import { FaMoneyBillWave, FaWallet } from 'react-icons/fa';
+import { FaMoneyBillWave, FaWallet, FaRegBell, FaRegSmile } from 'react-icons/fa';
 import { FaRegCopy } from 'react-icons/fa';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -15,7 +15,7 @@ export default function Home() {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const partnerLogos = ["/images/Bank1.png", "/images/Bank2.png", "/images/Bank3.png", "/images/Bank4.png", "/images/Bank5.png", "/images/Bank6.png"];
+  const partnerLogos = ["/images/Bank1.png", "/images/Bank2.png", "/images/Bank3.png", "/images/Bank4.png", "/images/Bank5.png", "/images/Bank6.png", "/images/Bank7.jpg", "/images/Bank8.png", "/images/Bank9.png", "/images/Bank10.png", "/images/Bank11.jpeg", "/images/Bank12.png", "/images/Bank13.jpg", "/images/Bank14.jpg", "/images/Bank15.jpg", "/images/Bank16.jpg", "/images/Bank17.png", "/images/Bank18.jpg", "/images/Bank19.jpg", "/images/Bank20.jpg",];
 
   useEffect(() => {
     const fetchDashboardData = async (token) => {
@@ -138,22 +138,19 @@ export default function Home() {
     <WebsiteLayout>
       <HeroSection />
       <section className="my-8 md:my-12 px-4 sm:px-6 md:px-8 lg:px-20">
+
         <div className="grid grid-cols-2 gap-4 sm:gap-6 md:gap-8">
 
           {/* Recharge Section */}
-          <Link href="/recharge" className="flex items-center justify-center gap-1 py-3 md:py-5 bg-blue-600 cursor-pointer text-white px-4 rounded-lg hover:bg-blue-700 text-center">
-            <FaMoneyBillWave className="text-white text-xl sm:text-2xl" />
-            <span>
-              Recharge
-            </span>
+          <Link href="/recharge" className="flex items-center justify-center gap-2 py-3 md:py-5 bg-blue-600 cursor-pointer text-white px-4 rounded-lg hover:bg-blue-700 text-center">
+            <FaMoneyBillWave className="text-white text-2xl" />
+            <span className="font-semibold text-lg">Recharge</span>
           </Link>
 
           {/* Withdrawal Section */}
-          <Link href="/withdraw" className="flex items-center justify-center gap-1 py-3 md:py-5 bg-green-600 cursor-pointer text-white px-4 rounded-lg hover:bg-green-700 text-center">
-            <FaMoneyBillWave className="text-white text-xl sm:text-2xl" />
-            <span>
-              Withdraw
-            </span>
+          <Link href="/withdraw" className="flex items-center justify-center gap-2 py-3 md:py-5 bg-green-600 cursor-pointer text-white px-4 rounded-lg hover:bg-green-700 text-center">
+            <FaWallet className="text-white text-2xl" />
+            <span className="font-semibold text-lg">Withdraw</span>
           </Link>
 
           {/* <div className="bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
@@ -188,6 +185,7 @@ export default function Home() {
           </div> */}
 
         </div>
+
       </section>
 
       <section className="my-8 md:my-12 lg:my-16 px-4 sm:px-6 md:px-8 lg:px-20">
@@ -229,18 +227,14 @@ export default function Home() {
       <section className="my-8 md:my-12 px-4 sm:px-6 md:px-8 lg:px-20">
         <div className="grid grid-cols-2 gap-4 sm:gap-6 md:gap-8">
 
-          <Link href="/notice" className="flex items-center justify-center gap-1 py-3 md:py-5  bg-white cursor-pointer text-black px-4 rounded-lg  text-center">
-            <FaMoneyBillWave className="text-primary text-xl sm:text-2xl" />
-            <span>
-              Notice
-            </span>
+          <Link href="/notice" className="flex items-center justify-center gap-2 py-3 md:py-5  bg-white cursor-pointer text-black px-4 rounded-lg  text-center">
+            <FaRegBell className="text-primary text-2xl" />
+            <span className="font-semibold text-lg">Notice</span>
           </Link>
 
-          <Link href="/welcome" className="flex items-center justify-center gap-1 py-3 md:py-5 bg-white  cursor-pointer text-black px-4 rounded-lg  text-center">
-            <FaMoneyBillWave className="text-primary text-xl sm:text-2xl" />
-            <span>
-              Welcome
-            </span>
+          <Link href="/welcome" className="flex items-center justify-center gap-2 py-3 md:py-5 bg-white  cursor-pointer text-black px-4 rounded-lg  text-center">
+            <FaRegSmile className="text-primary text-2xl" />
+            <span className="font-semibold text-lg">Welcome</span>
           </Link>
 
         </div>
