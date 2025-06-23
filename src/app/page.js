@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+import SampleWinnerSlider from "@/components/WinnerSampleSlider";
 
 export default function Home() {
   const router = useRouter();
@@ -223,6 +224,7 @@ export default function Home() {
         </div>
       </section>
 
+      <SampleWinnerSlider />
 
       <section className="my-8 md:my-12 px-4 sm:px-6 md:px-8 lg:px-20">
         <div className="grid grid-cols-2 gap-4 sm:gap-6 md:gap-8">
