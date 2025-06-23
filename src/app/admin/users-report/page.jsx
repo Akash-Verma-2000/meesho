@@ -232,8 +232,9 @@ export default function UserReportPage() {
                                         <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Balance</th>
                                         <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Frozen Balance</th>
                                         <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Status</th>
-                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Actions</th>
+                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Block User</th>
                                         <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Release Frozen</th>
+                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">View Details</th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
@@ -253,7 +254,7 @@ export default function UserReportPage() {
                                                 }`}>
                                                 {user.isBlocked ? 'Blocked' : 'Active'}
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 flex gap-2">
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 flex justify-center gap-2">
                                                 <button
                                                     onClick={() => handleToggleBlock(user._id, user.isBlocked)}
                                                     className={`py-1 px-3 rounded-md text-white text-xs font-semibold ${user.isBlocked ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'}`}
@@ -261,14 +262,8 @@ export default function UserReportPage() {
                                                 >
                                                     {user.isBlocked ? 'Unblock' : 'Block'}
                                                 </button>
-                                                <button
-                                                    onClick={() => handleViewBank(user._id)}
-                                                    className="py-1 px-3 rounded-md text-white text-xs font-semibold bg-blue-500 hover:bg-blue-600"
-                                                    disabled={bankLoading}
-                                                >
-                                                    View Bank
-                                                </button>
                                             </td>
+                                           
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                                 <button
                                                     className={`py-1 px-3 rounded-md text-white text-xs font-semibold ${user.frozenBalance === 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-purple-500 hover:bg-purple-600'}`}
@@ -302,6 +297,15 @@ export default function UserReportPage() {
                                                     }}
                                                 >
                                                     Release
+                                                </button>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 flex gap-2">
+                                                <button
+                                                    onClick={() => handleViewBank(user._id)}
+                                                    className="py-1 px-3 rounded-md text-white text-xs font-semibold bg-blue-500 hover:bg-blue-600"
+                                                    disabled={bankLoading}
+                                                >
+                                                    View Bank
                                                 </button>
                                             </td>
                                         </tr>
