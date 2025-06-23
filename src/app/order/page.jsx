@@ -136,7 +136,7 @@ export default function OrdersPage() {
                 </div>
 
                 {/* Orders Table */}
-                <div className="bg-white rounded-xl shadow-lg overflow-hidden m-5">
+                <div className="overflow-hidden m-5">
                     {totalOrders === 0 ? (
                         <div className="flex flex-col items-center justify-center py-20 px-4">
                             <FaFileAlt className="text-gray-400 text-6xl mb-4" />
@@ -145,52 +145,61 @@ export default function OrdersPage() {
                         </div>
                     ) : (
                         <div className="overflow-x-auto rounded-xl">
-                            <table className="min-w-full divide-y divide-gray-200 hidden sm:table">
-                                <thead className="bg-primary">
-                                    <tr>
-                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">S No</th>
-                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Image</th>
-                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Title</th>
-                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Description</th>
-                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Price</th>
-                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Commission</th>
-                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Commission Amount</th>
-                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Grabbed At</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
+                            <table className="min-w-full divide-y divide-gray-200">
+
+                                <tbody className="divide-y divide-gray-200">
                                     {orders.map((order, index) => (
-                                        <tr key={order._id}>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{startOrder + index}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                                {order.img && (
-                                                    <Image
-                                                        src={order.img}
-                                                        alt={order.title}
-                                                        width={50}
-                                                        height={50}
-                                                        objectFit="cover"
-                                                        className="rounded-md"
-                                                    />
-                                                )}
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{order.title}</td>
-                                            <td className="px-6 py-4 text-sm text-gray-700 max-w-xs overflow-hidden truncate">{order.description}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">₹{order.price.toFixed(2)}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{order.comission.toFixed(2)}%</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-medium">
-                                                ₹{((order.price * order.comission) / 100).toFixed(2)}
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                                {order.grabbedAt ? new Date(order.grabbedAt).toLocaleString() : '-'}
-                                            </td>
-                                        </tr>
+                                        // <tr key={order._id}>
+                                        <div className="flex flex-col bg-white my-5 py-2 sm:py-5 pe-2 sm:pe-5  rounded-xl shadow-lg">
+
+                                            <div className='flex justify-between'>
+                                                <span className="text-xs ms-2 font-semibold text-gray-400 mb-1">{order.grabbedAt ? new Date(order.grabbedAt).toLocaleString() : '-'}</span>
+                                                <span className="text-xs sm:ms-7 font-semibold text-gray-400 mb-1">The order is finished</span>
+                                            </div>
+
+
+                                            <div className='flex flex-row items-center justify-between'>
+
+
+                                                <div className="flex w-full sm:w-auto mt-5">
+                                                    <div className="flex-shrink-0 -me-20 sm:-me-16">
+                                                        {order.img && (
+                                                            <Image
+                                                                src={order.img}
+                                                                alt={order.title}
+                                                                width={200}
+                                                                height={200}
+                                                                className="rounded-md -ms-9 sm:-ms-8"
+                                                                style={{ objectFit: 'contain' }}
+                                                            />
+                                                        )}
+                                                    </div>
+                                                    <div className="flex flex-col gap-1">
+                                                        <span className="font-bold  text-gray-900">{order?.title}</span>
+                                                        <span className="text-sm text-gray-700">Price: <span className="font-semibold">₹{order.price.toFixed(2)}</span></span>
+                                                        <span className="text-sm text-gray-700">Commission: <span className="font-semibold">{order.comission.toFixed(2)}%</span></span>
+                                                        <span className="text-sm text-gray-700">Earning: <span className="font-semibold">₹{((order.price * order.comission) / 100).toFixed(2)}</span></span>
+                                                    </div>
+                                                </div>
+                                                <div className="flex flex-col items-end -ms-20 gap-2 mt-4 sm:mt-0 sm:ml-4 hidden sm:block">
+                                                    <div className="flex items-center gap-2">
+                                                        <svg className="w-14 h-14 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" />
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12l2.5 2.5L16 9" />
+                                                        </svg>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        // </tr>
                                     ))}
                                 </tbody>
                             </table>
 
                             {/* Responsive cards for small screens */}
-                            <div className="sm:hidden">
+                            {/* <div className="sm:hidden">
                                 {orders.map((order, index) => (
                                     <div key={order._id} className="bg-white p-4 mb-4 rounded-lg shadow-md">
 
@@ -215,11 +224,6 @@ export default function OrdersPage() {
                                             <span className="text-sm font-medium text-gray-500">Title:</span>
                                             <span className="text-sm text-gray-700">{order.title}</span>
                                         </div>
-                                        { /*
-                                          <div className="flex justify-between items-center mb-2">
-                                            <span className="text-sm font-medium text-gray-500">Description:</span>
-                                            <span className="text-sm text-gray-700 break-words max-w-[calc(100%-100px)] text-right">{order.description}</span>
-                                        </div>*/ }
 
                                         <div className="flex justify-between items-center mb-2">
                                             <span className="text-sm font-medium text-gray-500">Price:</span>
@@ -243,7 +247,7 @@ export default function OrdersPage() {
                                         </div>
                                     </div>
                                 ))}
-                            </div>
+                            </div> */}
 
                             {/* Pagination Controls */}
                             <div className="px-4 py-4 flex flex-col sm:flex-row items-center justify-between border-t border-gray-200 bg-gray-200 gap-y-4">

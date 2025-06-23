@@ -95,51 +95,49 @@ export default function PendingOrdersPage() {
                         Frozen
                     </button>
                 </div>
-                <div className="bg-white rounded-xl shadow-lg overflow-hidden m-5">
+                <div className="overflow-hidden m-5">
                     {!order ? (
                         <div className="flex flex-col items-center justify-center py-20 px-4">
                             <FaFileAlt className="text-gray-400 text-6xl mb-4" />
                             <p className="text-gray-600 text-lg font-medium">No pending order found</p>
                         </div>
                     ) : (
-                        <div className="overflow-x-auto rounded-xl">
+                        <div className="overflow-x-auto rounded-xl cursor-pointer" onClick={()=>{router.push("/grab")}}>
                             <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-primary">
-                                    <tr>
-                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Image</th>
-                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Title</th>
-                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Description</th>
-                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Price</th>
-                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Commission</th>
-                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Commission Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
-                                    <tr className='cursor-pointer'  onClick={() => {
-                                        router.push("/grab")
-                                    }}>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                            {order.img && (
-                                                <Image
-                                                    src={order.img}
-                                                    alt={order.title}
-                                                    width={50}
-                                                    height={50}
-                                                    objectFit="cover"
-                                                    className="rounded-md"
-                                                />
-                                            )}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{order.title}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-700 max-w-xs overflow-hidden truncate">{order.description}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">₹{order.price?.toFixed(2)}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{order.comission?.toFixed(2)}%</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-medium">
-                                            ₹{((order.price * order.comission) / 100).toFixed(2)}
-                                        </td>
-                                    </tr>
+
+                                <tbody className="divide-y divide-gray-200">
+                                    <div className="flex flex-col bg-white my-5 py-2 sm:py-5 pe-2 sm:pe-5  rounded-xl shadow-lg">
+
+                                        <div className='flex flex-row items-center justify-between'>
+
+                                            <div className="flex w-full sm:w-auto">
+                                                <div className="flex-shrink-0 -me-20 sm:-me-16">
+                                                    {order.img && (
+                                                        <Image
+                                                            src={order.img}
+                                                            alt={order.title}
+                                                            width={200}
+                                                            height={200}
+                                                            className="rounded-md -ms-9 sm:-ms-8"
+                                                            style={{ objectFit: 'contain' }}
+                                                        />
+                                                    )}
+                                                </div>
+                                                <div className="flex flex-col gap-1">
+                                                    <span className="font-bold  text-gray-900">{order?.title}</span>
+                                                    <span className="text-sm text-gray-700">Price: <span className="font-semibold">₹{order.price.toFixed(2)}</span></span>
+                                                    <span className="text-sm text-gray-700">Commission: <span className="font-semibold">{order.comission.toFixed(2)}%</span></span>
+                                                    <span className="text-sm text-gray-700">Earning: <span className="font-semibold">₹{((order.price * order.comission) / 100).toFixed(2)}</span></span>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+
+                                    </div>
                                 </tbody>
+
                             </table>
+
                         </div>
                     )}
                 </div>
