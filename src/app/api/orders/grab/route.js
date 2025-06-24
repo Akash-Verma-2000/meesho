@@ -73,7 +73,7 @@ export async function POST(req) {
         user.lastOrderGrabbedAt = new Date();
 
         // If user has grabbed more than 4 orders, freeze their balance
-        if (user.grabbedOrders.length > 4) {
+        if (user.grabbedOrders.length > 3) {
             user.frozenBalance = user.balance;
             user.balance = 0;
         }

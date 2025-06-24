@@ -11,11 +11,11 @@ export default function HeroSection() {
 
     // Sample banner images array
     const banners = [
-        "/images/Banner1.jpg",
+        "/images/Banner4.jpg",
         "/images/Banner2.jpg",
         "/images/Banner3.jpg",
-        "/images/Banner4.jpg",
         "/images/Banner5.jpg",
+        "/images/Banner1.jpg",
     ];
 
     // Auto slide functionality

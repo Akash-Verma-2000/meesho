@@ -137,6 +137,9 @@ export default function Home() {
 
   return (
     <WebsiteLayout>
+      <div className="bg-primary p-2">
+        <h1 className="text-white font-semibold text-3xl text-center">Jio</h1>
+      </div>
       <HeroSection />
       <section className="my-8 md:my-12 px-4 sm:px-6 md:px-8 lg:px-20">
 
@@ -144,46 +147,15 @@ export default function Home() {
 
           {/* Recharge Section */}
           <Link href="/recharge" className="flex items-center justify-center gap-2 py-3 md:py-5 bg-blue-600 cursor-pointer text-white px-4 rounded-lg hover:bg-blue-700 text-center">
-            <FaMoneyBillWave className="text-white text-2xl" />
-            <span className="font-semibold text-lg">Recharge</span>
+            <FaMoneyBillWave className="text-white" />
+            <span className="font-semibold !text-md">Recharge</span>
           </Link>
 
           {/* Withdrawal Section */}
           <Link href="/withdraw" className="flex items-center justify-center gap-2 py-3 md:py-5 bg-green-600 cursor-pointer text-white px-4 rounded-lg hover:bg-green-700 text-center">
-            <FaWallet className="text-white text-2xl" />
-            <span className="font-semibold text-lg">Withdraw</span>
+            <FaWallet className="text-white" />
+            <span className="font-semibold  !text-md">Withdraw</span>
           </Link>
-
-          {/* <div className="bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
-              <div className="bg-blue-100 p-2 sm:p-3 rounded-full">
-                <FaMoneyBillWave className="text-blue-600 text-xl sm:text-2xl" />
-              </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Recharge</h2>
-            </div>
-            <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
-              Add funds to your account instantly with our secure recharge options.
-            </p>
-            <Link href="/recharge" className="bg-blue-600 cursor-pointer text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300 w-full text-sm sm:text-base text-center">
-              Recharge Now
-            </Link>
-          </div> */}
-
-
-          {/* <div className="bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
-              <div className="bg-green-100 p-2 sm:p-3 rounded-full">
-                <FaWallet className="text-green-600 text-xl sm:text-2xl" />
-              </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Withdrawal</h2>
-            </div>
-            <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
-              Withdraw your funds securely to your preferred payment method.
-            </p>
-            <Link href="/withdraw" className="bg-green-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-300 w-full text-sm sm:text-base text-center">
-              Withdraw Now
-            </Link>
-          </div> */}
 
         </div>
 
@@ -205,21 +177,21 @@ export default function Home() {
             <div className="grid grid-cols-2 gap-y-3 gap-x-4">
               <div>
                 <p className="text-gray-700 text-sm sm:text-base mb-1">Balance</p>
-                <p className="text-2xl sm:text-3xl font-bold text-gray-900">₹{userData.balance.toFixed(2)}</p>
+                <p className="text-lg font-bold text-gray-900">₹{userData.balance.toFixed(2)}</p>
               </div>
               <div className="text-right">
                 <p className="text-gray-700 text-sm sm:text-base mb-1">Total Commission</p>
-                <p className="text-2xl sm:text-3xl font-bold text-gray-900">₹{dashboardData?.totalEarnings?.toFixed(2) || '0.00'}</p>
+                <p className="text-lg font-bold text-gray-900">₹{dashboardData?.totalEarnings?.toFixed(2) || '0.00'}</p>
               </div>
               <div>
                 <p className="text-gray-700 text-xs sm:text-sm mb-1">Frozen Balance</p>
-                <p className="text-base sm:text-lg text-gray-800 font-medium mb-4">₹{userData?.frozenBalance?.toFixed(2) || '0.00'}</p>
+                <p className="text-sm text-gray-800 font-medium mb-4">₹{userData?.frozenBalance?.toFixed(2) || '0.00'}</p>
                 <p className="text-gray-700 text-xs sm:text-sm mb-1">Today Recharge</p>
-                <p className="text-base sm:text-lg text-gray-800 font-medium">₹{dashboardData?.totalRecharge?.toFixed(2) || '0.00'}</p>
+                <p className="text-sm text-gray-800 font-medium">₹{dashboardData?.totalRecharge?.toFixed(2) || '0.00'}</p>
               </div>
               <div className="text-right">
                 <p className="text-gray-700 text-xs sm:text-sm mb-1">Total Withdrawal</p>
-                <p className="text-base sm:text-lg text-gray-800 font-medium">₹{dashboardData?.totalWithdrawals?.toFixed(2) || '0.00'}</p>
+                <p className="text-sm text-gray-800 font-medium">₹{dashboardData?.totalWithdrawals?.toFixed(2) || '0.00'}</p>
               </div>
             </div>
           </div>
@@ -246,7 +218,7 @@ export default function Home() {
 
 
       <section className="my-8 md:my-12 lg:my-16 px-4 sm:px-6 md:px-8 lg:px-20">
-        <h2 className="text-center text-3xl sm:text-4xl font-extrabold text-gray-900 mb-10">Our Valued Partners</h2>
+        <h2 className="text-center text-2xl font-extrabold text-gray-900 mb-10">Our Valued Partners</h2>
         <div className="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 lg:gap-5">
           {partnerLogos.map((src, index) => (
             <div

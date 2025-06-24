@@ -52,7 +52,8 @@ export async function POST(req) {
 
         let sponsor = null;
         if (sponsorId) {
-            sponsor = await UserModal.findOne({ userId: sponsorId, isDeleted: false });
+            sponsor = await UserModal.findOne({ userId: sponsorId});
+            console.log("SPONSOR =>",sponsor )
             if (!sponsor) {
                 response.message = "Sponsor not found";
                 return NextResponse.json(response, { status: 400 });

@@ -138,8 +138,8 @@ export default function ProfilePage() {
         {/* Balance Section */}
         <div className="bg-white p-5 lg:p-10 mx-5 md:mx-10 lg:mx-20 rounded-xl shadow-lg mb-6 border border-gray-200">
           <div className="flex justify-between items-center mb-2">
-            <p className="text-3xl sm:text-4xl font-extrabold text-gray-900">₹{userData.balance.toFixed(2)}</p>
-            <Link href="/withdraw" className="bg-blue-600 text-white text-base py-2 px-5 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300">
+            <p className="text-sm font-extrabold text-gray-900">₹{userData.balance.toFixed(2)}</p>
+            <Link href="/withdraw" className="bg-blue-600 text-white text-sm py-1 px-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300">
               Withdrawal
             </Link>
           </div>

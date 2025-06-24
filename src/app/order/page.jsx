@@ -154,7 +154,7 @@ export default function OrdersPage() {
 
                                             <div className='flex justify-between'>
                                                 <span className="text-xs ms-2 font-semibold text-gray-400 mb-1">{order.grabbedAt ? new Date(order.grabbedAt).toLocaleString() : '-'}</span>
-                                                <span className="text-xs sm:ms-7 font-semibold text-gray-400 mb-1">The order is finished</span>
+                                                <span className="text-xs sm:ms-7 font-semibold text-green-500 mb-1">The order is finished</span>
                                             </div>
 
 

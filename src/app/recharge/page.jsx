@@ -207,10 +207,10 @@ export default function RechargePage() {
                     key={amount}
                     type="button"
                     onClick={() => handleAmountButtonClick(amount)}
-                    className="p-3 border border-blue-300 rounded-md text-blue-700 font-semibold text-lg hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+                    className="p-3 border border-blue-300 rounded-md text-blue-700 font-semibold text-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
                     disabled={loading}
                   >
-                    {amount}.00
+                    {amount}
                   </button>
                 ))}
               </div>
