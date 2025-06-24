@@ -22,78 +22,78 @@ export default function WithdrawalPage() {
       [name]: value
     }));
     if (errors[name]) {
-        setErrors(prev => ({ ...prev, [name]: '' }));
+      setErrors(prev => ({ ...prev, [name]: '' }));
     }
   };
 
   const validateForm = () => {
-      const newErrors = {};
-      if (!withdrawalData.amount) {
-          newErrors.amount = 'Amount is required.';
-      } else if (isNaN(withdrawalData.amount) || parseFloat(withdrawalData.amount) <= 0) {
-          newErrors.amount = 'Amount must be a positive number.';
-      }
-      if (!withdrawalData.paymentPassword) {
-          newErrors.paymentPassword = 'Payment password is required.';
-      } else if (withdrawalData.paymentPassword.length < 8) {
-          newErrors.paymentPassword = 'Payment password must be at least 8 characters long.';
-      }
-      setErrors(newErrors);
-      return Object.keys(newErrors).length === 0;
+    const newErrors = {};
+    if (!withdrawalData.amount) {
+      newErrors.amount = 'Amount is required.';
+    } else if (isNaN(withdrawalData.amount) || parseFloat(withdrawalData.amount) <= 0) {
+      newErrors.amount = 'Amount must be a positive number.';
+    }
+    if (!withdrawalData.paymentPassword) {
+      newErrors.paymentPassword = 'Payment password is required.';
+    } else if (withdrawalData.paymentPassword.length < 8) {
+      newErrors.paymentPassword = 'Payment password must be at least 8 characters long.';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) {
-        return;
+      return;
     }
 
     setLoading(true);
     try {
-        const token = sessionStorage.getItem('jwtToken');
-        if (!token) {
-            toast.error('No authentication token found. Please log in.', { position: "top-right" });
-            router.push('/login');
-            return;
+      const token = sessionStorage.getItem('jwtToken');
+      if (!token) {
+        toast.error('No authentication token found. Please log in.', { position: "top-right" });
+        router.push('/login');
+        return;
+      }
+
+      const res = await fetch('/api/user/transaction', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          type: "withdraw",
+          amount: parseFloat(withdrawalData.amount),
+          password: withdrawalData.paymentPassword // API expects 'password' for paymentPassword
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.status === 'success') {
+        toast.success(data.message, { position: "top-right" });
+        setWithdrawalData({ amount: '', paymentPassword: '' });
+        setErrors({});
+      } else {
+        // Handle bank details not filled
+        if (res.status === 400 && data.redirectTo === '/bank-details') {
+          toast.error('Please fill the bank details first', { position: "top-right" });
+          router.push('/bank-details');
+          return;
         }
-
-        const res = await fetch('/api/user/transaction', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-                type: "withdraw",
-                amount: parseFloat(withdrawalData.amount),
-                password: withdrawalData.paymentPassword // API expects 'password' for paymentPassword
-            }),
-        });
-
-        const data = await res.json();
-
-        if (data.status === 'success') {
-            toast.success(data.message, { position: "top-right" });
-            setWithdrawalData({ amount: '', paymentPassword: '' });
-            setErrors({});
-        } else {
-            // Handle bank details not filled
-            if (res.status === 400 && data.redirectTo === '/bank-details') {
-                toast.error('Please fill the bank details first', { position: "top-right" });
-                router.push('/bank-details');
-                return;
-            }
-            toast.error(data.message || 'Failed to submit withdrawal request.', { position: "top-right" });
-            if (res.status === 401) {
-                sessionStorage.removeItem('jwtToken');
-                router.push('/login');
-            }
+        toast.error(data.message || 'Failed to submit withdrawal request.', { position: "top-right" });
+        if (res.status === 401) {
+          sessionStorage.removeItem('jwtToken');
+          router.push('/login');
         }
+      }
     } catch (err) {
-        console.error('Error submitting withdrawal request:', err);
-        toast.error('An unexpected error occurred while submitting withdrawal request.', { position: "top-right" });
+      console.error('Error submitting withdrawal request:', err);
+      toast.error('An unexpected error occurred while submitting withdrawal request.', { position: "top-right" });
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -126,7 +126,23 @@ export default function WithdrawalPage() {
                     disabled={loading}
                   />
                   {errors.amount && <p className="text-red-500 text-xs italic">{errors.amount}</p>}
-                   <p className="text-red-500 text-xs italic">5% Will be deducted as the tax from the withdrawal amount</p>
+                  <p className="text-red-500 text-xs italic">Minimum ₹200.00 and Maximum ₹999999.00</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                <FaMoneyBillWave className="text-blue-500 text-xl" />
+                <div className="flex-1">
+                  <label htmlFor="amount" className="text-sm text-gray-600">Actual amount on account</label>
+                  <input
+                    type="number"
+                    id="amount"
+                    name="amount"
+                    value={(withdrawalData.amount) - (withdrawalData.amount * 5 / 100)}
+                    className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    disabled
+                  />
+                  <p className="text-red-500 text-xs italic">Withdrawal Rate is 5%</p>
                 </div>
               </div>
 
@@ -164,9 +180,8 @@ export default function WithdrawalPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full py-3 rounded-lg font-semibold transition-colors duration-300 ${
-                    loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'
-                }`}
+                className={`w-full py-3 rounded-lg font-semibold transition-colors duration-300 ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'
+                  }`}
               >
                 {loading ? 'Submitting...' : 'Submit Withdrawal Request'}
               </button>
