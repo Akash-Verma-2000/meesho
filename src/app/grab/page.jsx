@@ -10,11 +10,15 @@ import { HiSpeakerWave } from "react-icons/hi2";
 
 export default function GrabPage() {
     const router = useRouter();
+    const [loadingProfile, setLoadingProfile]=useState(false);
     const [order, setOrder] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showInsufficientBalancePopup, setShowInsufficientBalancePopup] = useState(false);
     const [notice, setNotice] = useState("");
+    const [userProfile, setUserProfile] = useState(null);
+    const [timer, setTimer] = useState('60:00');
+    const timerIntervalRef = useRef();
 
     // --- Add for random names and amounts ---
     const indianNames = [
@@ -46,6 +50,53 @@ export default function GrabPage() {
             clearInterval(intervalRef.current);
         };
     }, []);
+
+    // Fetch user profile to get lastOrderGrabbedAt
+    useEffect(() => {
+        setLoadingProfile(true);
+
+        const fetchUserProfile = async () => {
+            try {
+                const token = sessionStorage.getItem('jwtToken');
+                if (!token) return;
+                const res = await fetch('/api/user/profile', {
+                    headers: { 'Authorization': `Bearer ${token}` },
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    setUserProfile(data.data);
+                }
+            } catch (err) {
+                // ignore
+            } finally {
+                setLoadingProfile(false);
+            }
+        };
+        fetchUserProfile();
+    }, [setOrder, order]);
+
+    // Timer logic
+    useEffect(() => {
+        if (!userProfile || !userProfile.lastOrderGrabbedAt) {
+            setTimer('60:00');
+            return;
+        }
+        function updateTimer() {
+            const grabbedAt = new Date(userProfile.lastOrderGrabbedAt);
+            const now = new Date();
+            const diffMs = 60 * 60 * 1000 - (now - grabbedAt);
+            if (diffMs <= 0) {
+                setTimer('00:00');
+                return;
+            }
+            const mins = Math.floor(diffMs / 60000);
+            const secs = Math.floor((diffMs % 60000) / 1000);
+            setTimer(`${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`);
+        }
+        updateTimer();
+        timerIntervalRef.current = setInterval(updateTimer, 1000);
+        return () => clearInterval(timerIntervalRef.current);
+    }, [userProfile]);
 
     const fetchNextOrder = async () => {
         setLoading(true);
@@ -139,7 +190,7 @@ export default function GrabPage() {
         }
     };
 
-    if (loading) {
+    if (loading ||loadingProfile) {
         return (
             <WebsiteLayout>
                 <div className="min-h-screen flex items-center justify-center">
@@ -243,17 +294,24 @@ export default function GrabPage() {
 
                             <button
                                 onClick={handleGrabOrder}
-                                disabled={loading}
-                                className={`w-full py-3 rounded-lg font-semibold transition-colors duration-300 ${loading
+                                disabled={loading || timer == '00:00'}
+                                className={`w-full py-3 rounded-lg font-semibold transition-colors duration-300 ${loading || timer == '00:00'
                                     ? 'bg-gray-400 cursor-not-allowed'
                                     : 'bg-blue-600 hover:bg-blue-700 text-white'
                                     }`}
                             >
-                                {loading ? 'Processing...' : 'Grab Now'}
+                                {loading ? 'Processing...' : `Grab Now${userProfile && userProfile.lastOrderGrabbedAt ? ` (Only ${timer} Mins Left)` : ''}`}
                             </button>
+                            {timer == '00:00' ?
+
+                                <p className='text-red-500 text-center text-sm mb-5 mt-2 '>
+
+                                    Your orders are frozen, please contact to support team
+                                </p> : null
+                            }
 
                             <p className='text-gray-500 text-sm my-5 flex gap-2 items-center'>
-                              <HiSpeakerWave/>  {currentName + '****'} has grabbed ₹{currentAmount}.00
+                                <HiSpeakerWave />  {currentName + '****'} has grabbed ₹{currentAmount}.00
                             </p>
 
                             <p className='text-gray-500 text-sm my-5'>

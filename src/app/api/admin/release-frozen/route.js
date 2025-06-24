@@ -13,7 +13,7 @@ export async function PUT(req) {
         if (!user) {
             return NextResponse.json({ status: "error", message: "User not found" }, { status: 404 });
         }
-        user.balance = user.frozenBalance;
+        user.balance = user.balance+user.frozenBalance;
         user.frozenBalance = 0;
         await user.save();
         return NextResponse.json({ status: "success", message: "Frozen balance released successfully", data: { balance: user.balance } }, { status: 200 });

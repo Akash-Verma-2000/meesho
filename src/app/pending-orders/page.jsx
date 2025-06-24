@@ -12,6 +12,7 @@ export default function PendingOrdersPage() {
     const [order, setOrder] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isfrozen, setIsFrozen] = useState(false);
 
     useEffect(() => {
         fetchPendingOrder();
@@ -35,6 +36,7 @@ export default function PendingOrdersPage() {
             const data = await response.json();
             if (data.status === 'success' && data.data) {
                 setOrder(data.data);
+                setIsFrozen(data.orderFrozen);
             } else {
                 setOrder(null);
             }
@@ -46,6 +48,7 @@ export default function PendingOrdersPage() {
             setLoading(false);
         }
     };
+
 
     if (loading) {
         return (
@@ -67,12 +70,14 @@ export default function PendingOrdersPage() {
         );
     }
 
+
+
     return (
         <WebsiteLayout>
             <div className="min-h-screen bg-gray-100 pb-20">
                 {/* Header */}
                 <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-5 mb-5 text-center text-xl font-bold shadow-lg">
-                    Pending Order
+                    Frozen Order
                 </div>
                 {/* Tabs */}
                 <div className="flex gap-2 justify-center mb-6">
@@ -96,16 +101,19 @@ export default function PendingOrdersPage() {
                     </button>
                 </div>
                 <div className="overflow-hidden m-5">
-                    {!order ? (
+                    {!order || isfrozen ?
                         <div className="flex flex-col items-center justify-center py-20 px-4">
                             <FaFileAlt className="text-gray-400 text-6xl mb-4" />
                             <p className="text-gray-600 text-lg font-medium">No pending order found</p>
                         </div>
-                    ) : (
-                        <div className="overflow-x-auto rounded-xl cursor-pointer" onClick={()=>{router.push("/grab")}}>
+                        : null
+                    }
+
+                    {order && !isfrozen ?
+                        <div className="overflow-x-auto rounded-xl cursor-pointer" onClick={() => { router.push("/grab") }}>
                             <table className="min-w-full divide-y divide-gray-200">
 
-                                <tbody className="divide-y divide-gray-200">
+                                <div className="divide-y divide-gray-200">
                                     <div className="flex flex-col bg-white my-5 py-2 sm:py-5 pe-2 sm:pe-5  rounded-xl shadow-lg">
 
                                         <div className='flex flex-row items-center justify-between'>
@@ -130,16 +138,17 @@ export default function PendingOrdersPage() {
                                                     <span className="text-sm text-gray-700">Earning: <span className="font-semibold">₹{((order.price * order.comission) / 100).toFixed(2)}</span></span>
                                                 </div>
                                             </div>
-                                            
+
                                         </div>
 
                                     </div>
-                                </tbody>
+                                </div>
 
                             </table>
 
                         </div>
-                    )}
+                        : null
+                    }
                 </div>
             </div>
         </WebsiteLayout>

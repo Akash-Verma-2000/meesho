@@ -18,6 +18,10 @@ export default function UserReportPage() {
     const [bankLoading, setBankLoading] = useState(false);
     const [bankError, setBankError] = useState(null);
     const [selectedUserId, setSelectedUserId] = useState(null);
+    const [releaseOrderLoadingId, setReleaseOrderLoadingId] = useState(null);
+    const [blockUserLoadingId, setBlockUserLoadingId] = useState(null);
+    const [releaseFrozenLoadingId, setReleaseFrozenLoadingId] = useState(null);
+    const [viewBankLoadingId, setViewBankLoadingId] = useState(null);
     const modalRef = useRef();
 
     useEffect(() => {
@@ -65,6 +69,7 @@ export default function UserReportPage() {
 
     const handleToggleBlock = async (userId, currentBlockedStatus) => {
         const newBlockedStatus = !currentBlockedStatus;
+        setBlockUserLoadingId(userId);
         setLoading(true); // Set loading to true while toggling
         try {
             const token = sessionStorage.getItem('jwtToken');
@@ -101,6 +106,7 @@ export default function UserReportPage() {
             toast.error('An unexpected error occurred while toggling block status.', { position: "top-right" });
         } finally {
             setLoading(false); // Reset loading after toggle attempt
+            setBlockUserLoadingId(null);
         }
     };
 
@@ -109,6 +115,7 @@ export default function UserReportPage() {
         setBankModalOpen(true);
         setBankDetails(null);
         setBankError(null);
+        setViewBankLoadingId(userId);
         setBankLoading(true);
         try {
             const token = sessionStorage.getItem('jwtToken');
@@ -132,6 +139,7 @@ export default function UserReportPage() {
             setBankError('An unexpected error occurred while fetching bank details.');
         } finally {
             setBankLoading(false);
+            setViewBankLoadingId(null);
         }
     };
 
@@ -159,6 +167,14 @@ export default function UserReportPage() {
 
     const startUser = (currentPage - 1) * usersPerPage + 1;
     const endUser = Math.min(currentPage * usersPerPage, totalUsers);
+
+    function canReleaseOrder(user) {
+        if (!user.lastOrderGrabbedAt) return true;
+        const grabbedAt = new Date(user.lastOrderGrabbedAt);
+        const now = new Date();
+        const diffMs = now - grabbedAt;
+        return diffMs >= 60 * 60 * 1000;
+    }
 
     if (loading) {
         return (
@@ -232,8 +248,9 @@ export default function UserReportPage() {
                                         <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Balance</th>
                                         <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Frozen Balance</th>
                                         <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Status</th>
+                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Release Order</th>
                                         <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Block User</th>
-                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Release Frozen</th>
+                                        <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">Release Balance</th>
                                         <th className="px-6 py-5 text-left text-xs font-medium text-white uppercase tracking-wider">View Details</th>
                                     </tr>
                                 </thead>
@@ -254,21 +271,59 @@ export default function UserReportPage() {
                                                 }`}>
                                                 {user.isBlocked ? 'Blocked' : 'Active'}
                                             </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                                <button
+                                                    className={`py-1 px-3 rounded-md text-white text-xs font-semibold ${!canReleaseOrder(user) ? 'bg-gray-300 cursor-not-allowed' : 'bg-orange-500 hover:bg-orange-600'}`}
+                                                    disabled={!canReleaseOrder(user) || releaseOrderLoadingId === user._id}
+                                                    onClick={async () => {
+                                                        setReleaseOrderLoadingId(user._id);
+                                                        try {
+                                                            const token = sessionStorage.getItem('jwtToken');
+                                                            if (!token) {
+                                                                toast.error('No authentication token found. Please log in as admin.', { position: "top-right" });
+                                                                router.push('/admin-login');
+                                                                return;
+                                                            }
+                                                            const res = await fetch('/api/admin/unfrozOrder', {
+                                                                method: 'POST',
+                                                                headers: {
+                                                                    'Content-Type': 'application/json',
+                                                                    'Authorization': `Bearer ${token}`,
+                                                                },
+                                                                body: JSON.stringify({ _id: user._id }),
+                                                            });
+                                                            const data = await res.json();
+                                                            if (data.status === 'success') {
+                                                                toast.success(data.message, { position: "top-right" });
+                                                                fetchUsers();
+                                                            } else {
+                                                                toast.error(data.message || 'Failed to release order.', { position: "top-right" });
+                                                            }
+                                                        } catch (err) {
+                                                            toast.error('An unexpected error occurred while releasing order.', { position: "top-right" });
+                                                        } finally {
+                                                            setReleaseOrderLoadingId(null);
+                                                        }
+                                                    }}
+                                                >
+                                                    {releaseOrderLoadingId === user._id ? 'Processing...' : 'Release'}
+                                                </button>
+                                            </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 flex justify-center gap-2">
                                                 <button
                                                     onClick={() => handleToggleBlock(user._id, user.isBlocked)}
                                                     className={`py-1 px-3 rounded-md text-white text-xs font-semibold ${user.isBlocked ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'}`}
-                                                    disabled={loading}
+                                                    disabled={blockUserLoadingId === user._id}
                                                 >
-                                                    {user.isBlocked ? 'Unblock' : 'Block'}
+                                                    {blockUserLoadingId === user._id ? 'Processing...' : (user.isBlocked ? 'Unblock' : 'Block')}
                                                 </button>
                                             </td>
-
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                                 <button
                                                     className={`py-1 px-3 rounded-md text-white text-xs font-semibold ${user.frozenBalance === 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-purple-500 hover:bg-purple-600'}`}
-                                                    disabled={user.frozenBalance === 0}
+                                                    disabled={user.frozenBalance === 0 || releaseFrozenLoadingId === user._id}
                                                     onClick={async () => {
+                                                        setReleaseFrozenLoadingId(user._id);
                                                         try {
                                                             const token = sessionStorage.getItem('jwtToken');
                                                             if (!token) {
@@ -293,19 +348,21 @@ export default function UserReportPage() {
                                                             }
                                                         } catch (err) {
                                                             toast.error('An unexpected error occurred while releasing frozen balance.', { position: "top-right" });
+                                                        } finally {
+                                                            setReleaseFrozenLoadingId(null);
                                                         }
                                                     }}
                                                 >
-                                                    Release
+                                                    {releaseFrozenLoadingId === user._id ? 'Processing...' : 'Release'}
                                                 </button>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 flex gap-2">
                                                 <button
                                                     onClick={() => handleViewBank(user._id)}
                                                     className="py-1 px-3 rounded-md text-white text-xs font-semibold bg-blue-500 hover:bg-blue-600"
-                                                    disabled={bankLoading}
+                                                    disabled={viewBankLoadingId === user._id}
                                                 >
-                                                    View Bank
+                                                    {viewBankLoadingId === user._id ? 'Processing...' : 'View Bank'}
                                                 </button>
                                             </td>
                                         </tr>
@@ -360,20 +417,60 @@ export default function UserReportPage() {
                                                 {user.isBlocked ? 'Blocked' : 'Active'}
                                             </span>
                                         </div>
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="text-sm font-medium text-gray-500">Release Order:</span>
+                                            <button
+                                                className={`py-1 px-3 rounded-md text-white text-xs font-semibold ${!canReleaseOrder(user) ? 'bg-gray-300 cursor-not-allowed' : 'bg-orange-500 hover:bg-orange-600'}`}
+                                                disabled={!canReleaseOrder(user) || releaseOrderLoadingId === user._id}
+                                                onClick={async () => {
+                                                    setReleaseOrderLoadingId(user._id);
+                                                    try {
+                                                        const token = sessionStorage.getItem('jwtToken');
+                                                        if (!token) {
+                                                            toast.error('No authentication token found. Please log in as admin.', { position: "top-right" });
+                                                            router.push('/admin-login');
+                                                            return;
+                                                        }
+                                                        const res = await fetch('/api/admin/unfrozOrder', {
+                                                            method: 'POST',
+                                                            headers: {
+                                                                'Content-Type': 'application/json',
+                                                                'Authorization': `Bearer ${token}`,
+                                                            },
+                                                            body: JSON.stringify({ _id: user._id }),
+                                                        });
+                                                        const data = await res.json();
+                                                        if (data.status === 'success') {
+                                                            toast.success(data.message, { position: "top-right" });
+                                                            fetchUsers();
+                                                        } else {
+                                                            toast.error(data.message || 'Failed to release order.', { position: "top-right" });
+                                                        }
+                                                    } catch (err) {
+                                                        toast.error('An unexpected error occurred while releasing order.', { position: "top-right" });
+                                                    } finally {
+                                                        setReleaseOrderLoadingId(null);
+                                                    }
+                                                }}
+                                            >
+                                                {releaseOrderLoadingId === user._id ? 'Processing...' : 'Release'}
+                                            </button>
+                                        </div>
                                         <div className="flex justify-between items-center">
                                             <span className="text-sm font-medium text-gray-500">Actions:</span>
                                             <div className="flex gap-2">
                                                 <button
                                                     onClick={() => handleToggleBlock(user._id, user.isBlocked)}
                                                     className={`py-1 px-3 rounded-md text-white text-xs font-semibold ${user.isBlocked ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'}`}
-                                                    disabled={loading}
+                                                    disabled={blockUserLoadingId === user._id}
                                                 >
-                                                    {user.isBlocked ? 'Unblock' : 'Block'}
+                                                    {blockUserLoadingId === user._id ? 'Processing...' : (user.isBlocked ? 'Unblock' : 'Block')}
                                                 </button>
                                                 <button
                                                     className={`py-1 px-3 rounded-md text-white text-xs font-semibold ${user.frozenBalance === 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-purple-500 hover:bg-purple-600'}`}
-                                                    disabled={user.frozenBalance === 0}
+                                                    disabled={user.frozenBalance === 0 || releaseFrozenLoadingId === user._id}
                                                     onClick={async () => {
+                                                        setReleaseFrozenLoadingId(user._id);
                                                         try {
                                                             const token = sessionStorage.getItem('jwtToken');
                                                             if (!token) {
@@ -398,17 +495,19 @@ export default function UserReportPage() {
                                                             }
                                                         } catch (err) {
                                                             toast.error('An unexpected error occurred while releasing frozen balance.', { position: "top-right" });
+                                                        } finally {
+                                                            setReleaseFrozenLoadingId(null);
                                                         }
                                                     }}
                                                 >
-                                                    Release Balance
+                                                    {releaseFrozenLoadingId === user._id ? 'Processing...' : 'Release'}
                                                 </button>
                                                 <button
                                                     onClick={() => handleViewBank(user._id)}
                                                     className="py-1 px-3 rounded-md text-white text-xs font-semibold bg-blue-500 hover:bg-blue-600"
-                                                    disabled={bankLoading}
+                                                    disabled={viewBankLoadingId === user._id}
                                                 >
-                                                    View Bank
+                                                    {viewBankLoadingId === user._id ? 'Processing...' : 'View Bank'}
                                                 </button>
                                             </div>
                                         </div>

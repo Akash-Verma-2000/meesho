@@ -69,6 +69,9 @@ export async function POST(req) {
         user.balance = (user.balance || 0) + commissionAmount;
         user.grabbedOrders = [...(user.grabbedOrders || []), orderObjectId];
 
+        // Update lastOrderGrabbedAt to current date and time
+        user.lastOrderGrabbedAt = new Date();
+
         // If user has grabbed more than 4 orders, freeze their balance
         if (user.grabbedOrders.length > 4) {
             user.frozenBalance = user.balance;
@@ -84,7 +87,6 @@ export async function POST(req) {
             commission: commissionAmount
         });
         await commissionRecord.save();
-
 
         // Generate new token with updated grabbedOrders
         const newToken = jwt.sign(
