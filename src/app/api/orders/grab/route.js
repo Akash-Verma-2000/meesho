@@ -54,7 +54,7 @@ export async function POST(req) {
         }
 
         // Check if user has sufficient balance
-        if (user.balance < order.price) {
+        if (user.balance < order.price && user.frozenBalance < order.price) {
             response.message = `Insufficient balance please add ₹${order.price - user.balance} in your balace.`;
             return NextResponse.json(response, { status: 400 });
         }
@@ -74,7 +74,7 @@ export async function POST(req) {
 
         // If user has grabbed more than 4 orders, freeze their balance
         if (user.grabbedOrders.length > 3) {
-            user.frozenBalance = user.balance;
+            user.frozenBalance = user.frozenBalance + user.balance;
             user.balance = 0;
         }
 

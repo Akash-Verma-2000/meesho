@@ -2,6 +2,7 @@
 import WebsiteLayout from '@/components/WebsiteLayout';
 import { useState } from 'react';
 import { FaMoneyBillWave, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { GiTakeMyMoney } from "react-icons/gi";
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 
@@ -131,7 +132,7 @@ export default function WithdrawalPage() {
               </div>
 
               <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
-                <FaMoneyBillWave className="text-blue-500 text-xl" />
+                <GiTakeMyMoney className="text-blue-500 text-xl" />
                 <div className="flex-1">
                   <label htmlFor="amount" className="text-sm text-gray-600">Actual amount on account</label>
                   <input
