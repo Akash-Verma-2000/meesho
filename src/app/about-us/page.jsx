@@ -13,7 +13,7 @@ export default function AboutUsPage() {
 
         {/* Content */}
         <p className='p-5'>
-          Gvp Infotech Limited (GIL) is a leading Public Limited Indian Non-Government Company incorporated in India on 17 June 2011 and has a history of 13 years and ten months. Its registered office is in Central Delhi, Delhi, India.
+          Jio Infocomh Limited (GIL) is a leading Public Limited Indian Non-Government Company incorporated in India on 17 June 2011 and has a history of 13 years and ten months. Its registered office is in Central Delhi, Delhi, India.
           <br />
           <br />
           The Corporate was formerly known as Fourth Dimension Solutions Private Limited. The Company is engaged in the Information Technology Industry.
@@ -22,7 +22,7 @@ export default function AboutUsPage() {
           converted into a public limited company in the year 2015. The company got listed on National Stock exchange in the year 2016, subsequently there was a change in management board of the company in 2020. Our dedication towards our clients has become a great hallmark of our company. Our highly dedicated and self motivated staff is always available for clients. We remove obstacles and successfully lead you project from implement to delivery stage.
           <br />
           <br />
-          GVP Infotech Limited is an Information Technology (IT) Infrastructure, technical support services and operations outsourcing company head quartered at New Delhi, India, The company is engaged in outsourcing activities like eGovernance, CSC, enrollment services, Manpower provisioning, scanning and digitization, Citizen service Centers, IT Services etc
+          Jio Infocomh Limited is an Information Technology (IT) Infrastructure, technical support services and operations outsourcing company head quartered at New Delhi, India, The company is engaged in outsourcing activities like eGovernance, CSC, enrollment services, Manpower provisioning, scanning and digitization, Citizen service Centers, IT Services etc
           <br />
           <br />
           CIN/LLPIN:L74110DL2011PLC221111

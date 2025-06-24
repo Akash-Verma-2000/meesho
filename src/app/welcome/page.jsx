@@ -7,7 +7,7 @@ export default function Page() {
                 Welcome to !
                 <br />
                 <br />
-                Gvp Infotech Limited (GIL) is a leading Public Limited Indian Non-Government Company incorporated in India on 09 November 2010 and has a history of 14 years and two months. Its registered office is in Delhi, India.
+                Jio Infocomh Limited (GIL) is a leading Public Limited Indian Non-Government Company incorporated in India on 09 November 2010 and has a history of 14 years and two months. Its registered office is in Delhi, India.
                 <br />
                 <br />
                 It is listed on the Bombay Stock Exchange(BSE) under the ticker symbol 534597 and on the National Stock Exchange(NSE) under RTNINDIA.
