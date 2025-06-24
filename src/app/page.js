@@ -165,7 +165,7 @@ export default function Home() {
         <div className=" bg-white p-6 sm:p-8 shadow-lg rounded-2xl relative overflow-hidden">
           <div className="relative z-10">
             <div className="flex justify-between items-center mb-6">
-              <p className="text-xl sm:text-2xl font-extrabold text-gray-900">{userData.name}</p>
+              <p className="text-md font-extrabold text-gray-900">{userData.name}</p>
               <div className="flex items-center gap-3">
                 <span className="text-gray-700 text-base sm:text-lg font-medium">{userData.userId}</span>
                 <FaRegCopy

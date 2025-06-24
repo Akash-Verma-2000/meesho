@@ -71,7 +71,7 @@ export default function HeroSection() {
                 {banners.map((banner, index) => (
                     <div
                         key={index}
-                        className="min-w-full h-full"
+                        className="min-w-full h-[150px] md:h-[250px] lg:h-[350px] xl:h-[500px]"
                     >
                         <Image
                             width={1920}

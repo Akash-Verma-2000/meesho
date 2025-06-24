@@ -22,7 +22,7 @@ export default function BottomBar() {
 
                 {/* Center Button */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -mt-8 flex items-center justify-center">
-                    <Link href="/grab" className={`flex items-center justify-center w-16 h-16 rounded-full shadow-2xl text-white transition-transform duration-200 hover:scale-110 border-4 border-white ${pathname.startsWith('/grab') ? 'bg-blue-700' : 'bg-blue-600'}`}>
+                    <Link href="/balance-details" className={`flex items-center justify-center w-16 h-16 rounded-full shadow-2xl text-white transition-transform duration-200 hover:scale-110 border-4 border-white ${pathname.startsWith('/grab') ? 'bg-blue-700' : 'bg-blue-600'}`}>
                         <span className='text-2xl font-semibold'>
                             GO
                         </span>
