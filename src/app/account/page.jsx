@@ -1,7 +1,7 @@
 'use client'
 import WebsiteLayout from '@/components/WebsiteLayout';
 import { useState, useEffect } from 'react';
-import { FaUserCircle, FaWallet, FaClipboardList, FaFileAlt, FaLock, FaAddressBook, FaUserFriends, FaClipboardCheck, FaQuestionCircle, FaLanguage, FaSignOutAlt, FaRegCopy, FaChevronRight, FaTimes, FaMoneyBillWave, FaMoneyCheckAlt } from 'react-icons/fa';
+import { FaWallet, FaClipboardList, FaFileAlt, FaLock, FaAddressBook, FaUserFriends, FaClipboardCheck, FaQuestionCircle, FaLanguage, FaSignOutAlt, FaRegCopy, FaChevronRight, FaTimes, FaMoneyBillWave, FaMoneyCheckAlt, FaUser, FaUserCircle } from 'react-icons/fa';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
@@ -121,7 +121,7 @@ export default function ProfilePage() {
         {/* User Info Section */}
         <div className="bg-white p-5 flex items-center justify-between shadow-lg mb-4 rounded-b-xl">
           <div className="flex items-center gap-3">
-            <FaUserCircle className="text-6xl text-blue-400" />
+            <img src="/images/Avtar.jpg" alt="User Avatar" className="w-16 h-16 rounded-full object-cover" />
             <div>
               <p className="font-extrabold text-xl text-gray-900">{userData.name}</p>
               <p className="text-sm text-gray-600">User ID: <span className="font-medium">{userData.userId}</span></p>
@@ -137,7 +137,7 @@ export default function ProfilePage() {
 
         {/* Balance Section */}
         <div className="bg-white p-5 lg:p-10 mx-5 md:mx-10 lg:mx-20 rounded-xl shadow-lg mb-6 border border-gray-200">
-          <div className="flex justify-between items-center mb-2">
+          <div className="flex justify-between items-center">
             <p className="text-sm font-extrabold text-gray-900">₹{userData.balance.toFixed(2)}</p>
             <Link href="/withdraw" className="bg-blue-600 text-white text-sm py-1 px-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300">
               Withdrawal
