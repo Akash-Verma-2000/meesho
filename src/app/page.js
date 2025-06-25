@@ -16,7 +16,7 @@ export default function Home() {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const partnerLogos = ["/images/Bank1.png", "/images/Bank2.png", "/images/Bank3.png", "/images/Bank4.png", "/images/Bank5.png", "/images/Bank6.png", "/images/Bank7.jpg", "/images/Bank8.png", "/images/Bank9.png", "/images/Bank10.png", "/images/Bank11.jpeg", "/images/Bank12.png", "/images/Bank13.jpg", "/images/Bank14.jpg", "/images/Bank15.jpg", "/images/Bank16.jpg", "/images/Bank17.png", "/images/Bank18.jpg", "/images/Bank19.jpg", "/images/Bank20.jpg",];
+  const partnerLogos = ["/images/Bank1.png", "/images/Bank2.png", "/images/Bank3.png", "/images/Bank4.png", "/images/Bank5.png", "/images/Bank6.png", "/images/Bank7.jpg", "/images/Bank8.png", "/images/Bank9.png", "/images/Bank10.png", "/images/Bank11.jpeg", "/images/Bank12.png", "/images/Bank13.jpg", "/images/Bank14.jpg", "/images/Bank15.jpg", "/images/Bank166.jpg", "/images/Bank17.png", "/images/Bank18.jpg", "/images/Bank19.jpg", "/images/Bank20.jpg",];
 
   useEffect(() => {
     const fetchDashboardData = async (token) => {
