@@ -3,7 +3,6 @@ import WebsiteLayout from '@/components/WebsiteLayout';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { FaMoneyBillWave, FaBarcode, FaLock, FaTimesCircle, FaEye, FaEyeSlash } from 'react-icons/fa';
-import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 
 export default function RechargePage() {
@@ -20,6 +19,9 @@ export default function RechargePage() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState({ title: '', description: '' });
 
   useEffect(() => {
     fetchQrCode();
@@ -37,12 +39,20 @@ export default function RechargePage() {
         setPaymentSettings(data.data);
       } else {
         setQrCodeError(data.message || 'Failed to fetch QR code.');
-        toast.error(data.message || 'Failed to fetch QR code.', { position: "top-right" });
+        setPopupMessage({
+          title: 'QR Code Error!',
+          description: data.message || 'Failed to fetch QR code.'
+        });
+        setShowErrorPopup(true);
       }
     } catch (err) {
       console.error('Error fetching QR code:', err);
       setQrCodeError('An unexpected error occurred while fetching QR code.');
-      toast.error('An unexpected error occurred while fetching QR code.', { position: "top-right" });
+      setPopupMessage({
+        title: 'Error!',
+        description: 'An unexpected error occurred while fetching QR code.'
+      });
+      setShowErrorPopup(true);
     } finally {
       setQrCodeLoading(false);
     }
@@ -116,19 +126,33 @@ export default function RechargePage() {
       const data = await res.json();
 
       if (data.status === 'success') {
-        toast.success(data.message, { position: "top-right" });
         setRechargeData({ amount: '', transactionId: '', paymentPassword: '' });
         setErrors({});
+        setPopupMessage({
+          title: 'Recharge Successful!',
+          description: 'Your recharge request has been submitted. You will receive your money very soon.'
+        });
+        setShowSuccessPopup(true);
       } else {
-        toast.error(data.message || 'Failed to submit recharge request.', { position: "top-right" });
-        if (res.status === 401) {
-          sessionStorage.removeItem('jwtToken');
-          router.push('/login');
-        }
+        setPopupMessage({
+          title: 'Recharge Failed!',
+          description: data.message || 'Failed to submit recharge request.'
+        });
+        setShowErrorPopup(true);
+        // if (res.status === 401) {
+        //   sessionStorage.removeItem('jwtToken');
+        //   setTimeout(() => {
+        //     router.push('/login');
+        //   }, 3000);
+        // }
       }
     } catch (err) {
       console.error('Error submitting recharge request:', err);
-      toast.error('An unexpected error occurred while submitting recharge request.', { position: "top-right" });
+      setPopupMessage({
+        title: 'Error!',
+        description: 'An unexpected error occurred while submitting recharge request.'
+      });
+      setShowErrorPopup(true);
     } finally {
       setLoading(false);
     }
@@ -137,6 +161,55 @@ export default function RechargePage() {
   return (
     <WebsiteLayout>
       <div className="min-h-screen bg-gray-100 pb-20">
+        {/* Success Popup */}
+        {showSuccessPopup && (
+          <div className="fixed inset-0 bg-black/80 bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg shadow-xl p-6 md:p-8 relative w-full max-w-sm text-center">
+              <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-green-500 rounded-full h-20 w-20 flex items-center justify-center shadow-lg">
+                <svg className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h2 className="text-xl font-bold text-gray-800 mt-8">SUCCESS</h2>
+              <p className="text-gray-600 mt-2">{popupMessage.title}</p>
+              <p className="text-gray-600">{popupMessage.description}</p>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowSuccessPopup(false);
+                  router.push('/');
+                }}
+                className="mt-6 w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Error Popup */}
+        {showErrorPopup && (
+          <div className="fixed inset-0 bg-black/80 bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg shadow-xl p-6 md:p-8 relative w-full max-w-sm text-center">
+              <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-red-500 rounded-full h-20 w-20 flex items-center justify-center shadow-lg">
+                <svg className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </div>
+              <h2 className="text-xl font-bold text-gray-800 mt-8">ERROR!</h2>
+              <p className="text-gray-600 mt-2">{popupMessage.title}</p>
+              <p className="text-gray-600">{popupMessage.description}</p>
+              <button
+                type="button"
+                onClick={() => setShowErrorPopup(false)}
+                className="mt-6 w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              >
+                Try Again
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-4 text-center text-xl font-bold shadow-lg">
           Recharge Account

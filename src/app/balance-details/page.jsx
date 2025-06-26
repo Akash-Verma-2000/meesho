@@ -182,7 +182,7 @@ export default function Home() {
                             <div>
 
                                 <p className="text-white text-lg ">
-                                    <span>AMAZON Flagship store</span>
+                                    <span>Jio Flagship store</span>
                                 </p>
                                 <p className="text-gray-200 text-sm">
                                     Commission 30.00%

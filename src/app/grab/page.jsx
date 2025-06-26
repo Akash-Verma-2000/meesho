@@ -10,7 +10,7 @@ import { HiSpeakerWave } from "react-icons/hi2";
 
 export default function GrabPage() {
     const router = useRouter();
-    const [loadingProfile, setLoadingProfile]=useState(false);
+    const [loadingProfile, setLoadingProfile] = useState(false);
     const [order, setOrder] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -19,6 +19,9 @@ export default function GrabPage() {
     const [userProfile, setUserProfile] = useState(null);
     const [timer, setTimer] = useState('60:00');
     const timerIntervalRef = useRef();
+    const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+    const [showErrorPopup, setShowErrorPopup] = useState(false);
+    const [popupMessage, setPopupMessage] = useState({ title: '', description: '' });
 
     // --- Add for random names and amounts ---
     const indianNames = [
@@ -122,16 +125,31 @@ export default function GrabPage() {
             } else {
                 if (response.status === 401) {
                     sessionStorage.removeItem('jwtToken');
-                    router.push('/login');
+                    setPopupMessage({
+                        title: 'Authentication Error!',
+                        description: 'Your session has expired. Please log in again.'
+                    });
+                    setShowErrorPopup(true);
+                    setTimeout(() => {
+                        router.push('/login');
+                    }, 3000);
                     return;
                 }
                 setError(data.message || 'Failed to fetch order');
-                toast.error(data.message || 'Failed to fetch order', { position: "top-right" });
+                setPopupMessage({
+                    title: 'Order Fetch Error!',
+                    description: data.message || 'Failed to fetch order.'
+                });
+                setShowErrorPopup(true);
             }
         } catch (err) {
             console.error('Error fetching order:', err);
             setError('An unexpected error occurred');
-            toast.error('An unexpected error occurred', { position: "top-right" });
+            setPopupMessage({
+                title: 'Error!',
+                description: 'An unexpected error occurred while fetching order.'
+            });
+            setShowErrorPopup(true);
         } finally {
             setLoading(false);
         }
@@ -166,31 +184,49 @@ export default function GrabPage() {
                     sessionStorage.setItem('jwtToken', data.data.token);
                 }
                 setNotice(data.notice);
-                toast.success(data.message, { position: "top-right" });
+                setPopupMessage({
+                    title: 'Order Grabbed Successfully!',
+                    description: data.message || 'Your order has been successfully grabbed.'
+                });
+                setShowSuccessPopup(true);
                 // Fetch the next order
                 fetchNextOrder();
             } else {
                 if (response.status === 401) {
                     sessionStorage.removeItem('jwtToken');
-                    router.push('/login');
+                    setPopupMessage({
+                        title: 'Authentication Error!',
+                        description: 'Your session has expired. Please log in again.'
+                    });
+                    setShowErrorPopup(true);
+                    setTimeout(() => {
+                        router.push('/login');
+                    }, 3000);
                     return;
                 }
                 if (data.message == 'Insufficient balance') {
                     setShowInsufficientBalancePopup(true);
-                }
-                if (data.message != 'Insufficient balance') {
-                    toast.error(data.message || 'Failed to grab order', { position: "top-right" });
+                } else {
+                    setPopupMessage({
+                        title: 'Order Grab Failed!',
+                        description: data.message || 'Failed to grab order.'
+                    });
+                    setShowErrorPopup(true);
                 }
             }
         } catch (err) {
             console.error('Error grabbing order:', err);
-            toast.error('An unexpected error occurred', { position: "top-right" });
+            setPopupMessage({
+                title: 'Error!',
+                description: 'An unexpected error occurred while grabbing order.'
+            });
+            setShowErrorPopup(true);
         } finally {
             setLoading(false);
         }
     };
 
-    if (loading ||loadingProfile) {
+    if (loading || loadingProfile) {
         return (
             <WebsiteLayout>
                 <div className="min-h-screen flex items-center justify-center">
@@ -231,6 +267,56 @@ export default function GrabPage() {
 
     return (
         <WebsiteLayout>
+            {/* Success Popup */}
+            {showSuccessPopup && (
+                <div className="fixed inset-0 bg-black/80 bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-lg shadow-xl p-6 md:p-8 relative w-full max-w-sm text-center">
+                        <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-green-500 rounded-full h-20 w-20 flex items-center justify-center shadow-lg">
+                            <svg className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <h2 className="text-xl font-bold text-gray-800 mt-8">SUCCESS</h2>
+                        <p className="text-gray-600 mt-2">{popupMessage.title}</p>
+                        <p className="text-gray-600">{popupMessage.description}</p>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setShowSuccessPopup(false);
+                            }}
+                            className="mt-6 w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                        >
+                            Continue
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Error Popup */}
+            {showErrorPopup && (
+                <div className="fixed inset-0 bg-black/80 bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-lg shadow-xl p-6 md:p-8 relative w-full max-w-sm text-center">
+                        <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-red-500 rounded-full h-20 w-20 flex items-center justify-center shadow-lg">
+                            <svg className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </div>
+                        <h2 className="text-xl font-bold text-gray-800 mt-8">ERROR!</h2>
+                        <p className="text-gray-600 mt-2">{popupMessage.title}</p>
+                        <p className="text-gray-600">{popupMessage.description}</p>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setShowErrorPopup(false);
+                                router.push("/recharge")
+                            }}
+                            className="mt-6 w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                        >
+                            Recharge
+                        </button>
+                    </div>
+                </div>
+            )}
             {
                 notice ?
                     <div className='bg-green-500'>

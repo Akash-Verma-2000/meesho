@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { toast } from 'react-toastify';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -14,6 +13,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   const validateForm = () => {
     const newErrors = {};
@@ -50,45 +50,17 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (data.status === 'success') {
-        toast.success(data.message, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        setShowSuccessPopup(true);
         // Save JWT token to session storage
         if (data.data && data.data.token) {
           sessionStorage.setItem('jwtToken', data.data.token);
         }
-        router.push('/');
       } else {
-        toast.error(data.message || 'Login failed. Please try again.', {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        setErrors(prev => ({ ...prev, submit: data.message || 'Login failed. Please try again.' }));
       }
     } catch (error) {
       console.error('Login error:', error);
-      toast.error('An unexpected error occurred. Please try again.', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      setErrors(prev => ({ ...prev, submit: 'An unexpected error occurred. Please try again.' }));
     } finally {
       setLoading(false);
     }
@@ -118,6 +90,29 @@ export default function LoginPage() {
         backgroundRepeat: 'no-repeat',
       }}
     >
+      {showSuccessPopup && (
+        <div className="fixed inset-0 bg-black/80 bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl p-6 md:p-8 relative w-full max-w-sm text-center">
+            <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-green-500 rounded-full h-20 w-20 flex items-center justify-center shadow-lg">
+              <svg className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-800 mt-8">login successful</h2>
+            <p className="text-gray-600 mt-2">You details has been successfully submitted. Thanks!</p>
+            <button
+              type="button"
+              onClick={() => {
+                setShowSuccessPopup(false);
+                router.push('/');
+              }}
+              className="mt-6 w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
       <div className="max-w-md w-full space-y-8 bg-black/80 bg-opacity-90 px-5 py-10 md:px-10 md:py-14 rounded-xl shadow-lg">
         {/* Header */}
         <div className="text-center">

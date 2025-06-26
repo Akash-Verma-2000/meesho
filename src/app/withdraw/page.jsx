@@ -3,7 +3,6 @@ import WebsiteLayout from '@/components/WebsiteLayout';
 import { useState } from 'react';
 import { FaMoneyBillWave, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { GiTakeMyMoney } from "react-icons/gi";
-import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 
 export default function WithdrawalPage() {
@@ -15,6 +14,9 @@ export default function WithdrawalPage() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState({ title: '', description: '' });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -53,8 +55,14 @@ export default function WithdrawalPage() {
     try {
       const token = sessionStorage.getItem('jwtToken');
       if (!token) {
-        toast.error('No authentication token found. Please log in.', { position: "top-right" });
-        router.push('/login');
+        setPopupMessage({
+          title: 'Error!',
+          description: 'No authentication token found. Please log in.'
+        });
+        setShowErrorPopup(true);
+        setTimeout(() => {
+          router.push('/login');
+        }, 3000);
         return;
       }
 
@@ -74,25 +82,45 @@ export default function WithdrawalPage() {
       const data = await res.json();
 
       if (data.status === 'success') {
-        toast.success(data.message, { position: "top-right" });
         setWithdrawalData({ amount: '', paymentPassword: '' });
         setErrors({});
+        setPopupMessage({
+          title: 'Request submitted successfully.',
+          description: 'Your withdrawal request has been submitted. You will receive your money very soon.'
+        });
+        setShowSuccessPopup(true);
       } else {
         // Handle bank details not filled
         if (res.status === 400 && data.redirectTo === '/bank-details') {
-          toast.error('Please fill the bank details first', { position: "top-right" });
-          router.push('/bank-details');
+          setPopupMessage({
+            title: 'Withdrawal Failed',
+            description: 'Please fill the bank details first.'
+          });
+          setShowErrorPopup(true);
+          setTimeout(() => {
+            router.push('/bank-details');
+          }, 3000);
           return;
         }
-        toast.error(data.message || 'Failed to submit withdrawal request.', { position: "top-right" });
-        if (res.status === 401) {
-          sessionStorage.removeItem('jwtToken');
-          router.push('/login');
-        }
+        setPopupMessage({
+          title: 'Withdrawal Failed!',
+          description: data.message || 'Failed to submit withdrawal request.'
+        });
+        setShowErrorPopup(true);
+        // if (res.status === 401) {
+        //   sessionStorage.removeItem('jwtToken');
+        //   // setTimeout(() => {
+        //   //   router.push('/login');
+        //   // }, 3000);
+        // }
       }
     } catch (err) {
       console.error('Error submitting withdrawal request:', err);
-      toast.error('An unexpected error occurred while submitting withdrawal request.', { position: "top-right" });
+      setPopupMessage({
+        title: 'Error!',
+        description: 'An unexpected error occurred while submitting withdrawal request.'
+      });
+      setShowErrorPopup(true);
     } finally {
       setLoading(false);
     }
@@ -101,6 +129,70 @@ export default function WithdrawalPage() {
   return (
     <WebsiteLayout>
       <div className="min-h-screen bg-gray-100 pb-20">
+        {/* Success Popup */}
+        {showSuccessPopup && (
+          <div className="fixed inset-0 bg-black/80 bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg shadow-xl p-6 md:p-8 relative w-full max-w-sm text-center">
+              <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-green-500 rounded-full h-20 w-20 flex items-center justify-center shadow-lg">
+                <svg className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h2 className="text-xl font-bold text-gray-800 mt-8">SUCCESS</h2>
+              <p className="text-gray-600 mt-2">{popupMessage.title}</p>
+              <p className="text-gray-600">{popupMessage.description}</p>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowSuccessPopup(false);
+                  router.push('/');
+                }}
+                className="mt-6 w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Error Popup */}
+        {showErrorPopup && (
+          <div className="fixed inset-0 bg-black/80 bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg shadow-xl p-6 md:p-8 relative w-full max-w-sm text-center">
+              <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-red-500 rounded-full h-20 w-20 flex items-center justify-center shadow-lg">
+                <svg className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </div>
+              <h2 className="text-xl font-bold text-gray-800 mt-8">ERROR!</h2>
+              <p className="text-gray-600 mt-2">{popupMessage.title}</p>
+              <p className="text-gray-600">{popupMessage.description}</p>
+              {popupMessage.description === "Insufficient balance." ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowErrorPopup(false);
+                    router.push('/recharge');
+                  }}
+                  className="mt-6 w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  Recharge
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowErrorPopup(false);
+                  }}
+                  className="mt-6 w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                >
+                  Try Again
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-4 text-center text-xl font-bold shadow-lg">
           Withdraw Funds
