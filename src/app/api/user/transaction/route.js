@@ -34,7 +34,7 @@ export async function POST(req) {
             return NextResponse.json(response, { status: 400 });
         }
 
-        if (password!=user.paymentPassword) {
+        if (password != user.paymentPassword) {
             response.message = "Invalid password.";
             return NextResponse.json(response, { status: 401 });
         }
@@ -69,12 +69,12 @@ export async function POST(req) {
                 response.redirectTo = "/bank-details";
                 return NextResponse.json(response, { status: 400 });
             }
-            if (user.balance < amount) {
-                response.message = "Insufficient balance.";
-                return NextResponse.json(response, { status: 400 });
-            }
             if (user.grabbedOrders && user.grabbedOrders.length >= 4) {
                 response.message = "Please contact your customer support";
+                return NextResponse.json(response, { status: 400 });
+            }
+            if (user.balance < amount) {
+                response.message = "Insufficient balance.";
                 return NextResponse.json(response, { status: 400 });
             }
         }
@@ -159,5 +159,5 @@ export async function GET(req) {
         response.error = error.message;
         return NextResponse.json(response, { status: 500 });
     }
-} 
+}
 

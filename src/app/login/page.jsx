@@ -99,7 +99,7 @@ export default function LoginPage() {
               </svg>
             </div>
             <h2 className="text-2xl font-bold text-gray-800 mt-8">login successful</h2>
-            <p className="text-gray-600 mt-2">You details has been successfully submitted. Thanks!</p>
+            <p className="text-gray-600 mt-2">Your details has been successfully submitted. Thanks!</p>
             <button
               type="button"
               onClick={() => {
